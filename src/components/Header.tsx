@@ -1,26 +1,42 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "./ui/button";
-import { authClient } from "@/lib/authClient";
+import useAuth from "@/hooks/useAuth";
+import { LogOut } from "lucide-react"
+import logo from "@/logo.svg"
 
 export default function Header() {
+  const { isAuthenticated, logWithAuthelia, logout, isPending } = useAuth();
   return (
     <>
-      <header className="header bg-red-50 h-10 flex items-center px-4 shadow-md">
-        <div>
-          <h2>AI Chat App</h2>
-        </div>
-        <div className="ml-auto">
-          <Link to="/" className="px-2">
-            <Button
-              onClick={() => {
-                authClient.signIn.oauth2({
-                  providerId: "authelia",
-                });
-              }}
-            >
-              login
-            </Button>
-          </Link>
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 max-w-screen-2xl items-center px-4">
+          <div className="mr-4 flex">
+            <Link to="/" className="mr-6 flex items-center space-x-2">
+              <img src={logo} className="h-6 w-6" alt="Logo" />
+              <span className="hidden font-bold sm:inline-block">
+                My App
+              </span>
+            </Link>
+          </div>
+          <div className="flex flex-1 items-center justify-end space-x-2">
+            {
+              isPending ? <p className="text-sm text-muted-foreground">Loading...</p> :
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    isAuthenticated ? logout() : logWithAuthelia()
+                  }}
+                >
+                  {isAuthenticated ? (
+                    <>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </>
+                  ) : "Login"}
+                </Button>
+            }
+          </div>
         </div>
       </header>
     </>
