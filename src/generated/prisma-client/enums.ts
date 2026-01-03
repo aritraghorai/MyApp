@@ -9,7 +9,19 @@
 * 🟢 You can import this file directly.
 */
 
+export const AccountType = {
+  CASH: 'CASH',
+  BANK: 'BANK',
+  CREDIT_CARD: 'CREDIT_CARD'
+} as const
+
+export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const TransactionType = {
+  OUTFLOW: 'OUTFLOW',
+  CC_PAYMENT: 'CC_PAYMENT',
+  INCOME: 'INCOME'
+} as const
+
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]

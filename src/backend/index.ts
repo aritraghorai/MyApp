@@ -1,30 +1,25 @@
-import { auth } from "@/lib/auth";
 import Elysia, { t } from "elysia";
 import { logger } from "@tqman/nice-logger";
+import { expenseAccounts } from "./routes/expense-accounts";
+import { transactions } from "./routes/transactions";
+import { cards } from "./routes/cards";
+import { tags } from "./routes/tags";
+import { people } from "./routes/people";
+import { categories } from "./routes/categories";
+import { openapi } from '@elysiajs/openapi'
+
+
+import { authPlugin } from "./auth-plugin";
 
 const api = new Elysia({
   prefix: "/api",
 })
+  .use(openapi())
   .use(logger({
     mode: "live", // "live" or "combined" (default: "combined")
     withTimestamp: true, // optional (default: false)
   }))
-  .mount(auth.handler)
-  .macro({
-    auth: {
-      async resolve({ status, request: { headers } }) {
-        const session = await auth.api.getSession({
-          headers
-        })
-        if (!session) return status(401)
-
-        return {
-          user: session.user,
-          session: session.session
-        }
-      }
-    }
-  })
+  .use(authPlugin)
   .get("/", () => {
     console.log(process.env);
     return "Hi";
@@ -37,5 +32,11 @@ const api = new Elysia({
   .get("/user", ({ user }) => user, {
     auth: true,
   })
+  .use(expenseAccounts)
+  .use(transactions)
+  .use(cards)
+  .use(tags)
+  .use(people)
+  .use(categories);
 
 export default api;

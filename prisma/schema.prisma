@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String        @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean       @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   sessions      Session[]
   accounts      Account[]
+  transactions  Transaction[]
 
   @@unique([email])
   @@map("user")
@@ -74,4 +75,118 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum AccountType {
+  CASH
+  BANK
+  CREDIT_CARD
+}
+
+enum TransactionType {
+  OUTFLOW // Normal spending
+  CC_PAYMENT // Paying the credit card bill
+  INCOME // Salary, refunds, etc.
+}
+
+model ExpenseAccount {
+  id         String      @id @default(uuid())
+  name       String      @unique
+  type       AccountType
+  balance    Decimal     @default(0) // Current balance
+  limit      Decimal? // Only for Credit Cards
+  closingDay Int? // Day of month statement closes (1-31)
+  dueDay     Int? // Day of month payment is due
+
+  transactions     Transaction[] @relation("SourceAccount")
+  receivedPayments Transaction[] @relation("DestinationAccount")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("expense_accounts")
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  amount      Decimal
+  type        TransactionType @default(OUTFLOW)
+  description String?
+  date        DateTime        @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  // The account the money is coming FROM
+  accountId String
+  account   ExpenseAccount @relation("SourceAccount", fields: [accountId], references: [id], onDelete: Cascade)
+
+  // The account the money is going TO (Used for CC_PAYMENT)
+  destinationAccountId String?
+  destinationAccount   ExpenseAccount? @relation("DestinationAccount", fields: [destinationAccountId], references: [id])
+
+  personId String
+  person   Person @relation(fields: [personId], references: [id])
+
+  tags      ExpenseTag[]
+  createdAt DateTime     @default(now())
+
+  @@map("transactions")
+}
+
+model Card {
+  id           String    @id @default(uuid())
+  title        String
+  content      String?
+  isCreditCard Boolean   @default(false)
+  dueDate      DateTime?
+  limit        Float?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("card")
+}
+
+model Tag {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  expenseTags ExpenseTag[]
+
+  @@map("tag")
+}
+
+model ExpenseTag {
+  expenseId     String
+  tagId         String
+  tag           Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId String?
+
+  @@id([expenseId, tagId])
+  @@index([tagId])
+  @@map("expense_tag")
+}
+
+model Person {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  transactions Transaction[]
+
+  @@map("person")
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("category")
 }

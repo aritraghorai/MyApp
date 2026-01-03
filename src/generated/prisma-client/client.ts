@@ -59,3 +59,38 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model ExpenseAccount
+ * 
+ */
+export type ExpenseAccount = Prisma.ExpenseAccountModel
+/**
+ * Model Transaction
+ * 
+ */
+export type Transaction = Prisma.TransactionModel
+/**
+ * Model Card
+ * 
+ */
+export type Card = Prisma.CardModel
+/**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
+ * Model ExpenseTag
+ * 
+ */
+export type ExpenseTag = Prisma.ExpenseTagModel
+/**
+ * Model Person
+ * 
+ */
+export type Person = Prisma.PersonModel
+/**
+ * Model Category
+ * 
+ */
+export type Category = Prisma.CategoryModel
