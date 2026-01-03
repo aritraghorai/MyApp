@@ -27,16 +27,19 @@ export type AggregatePerson = {
 export type PersonMinAggregateOutputType = {
   id: string | null
   name: string | null
+  userId: string | null
 }
 
 export type PersonMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  userId: string | null
 }
 
 export type PersonCountAggregateOutputType = {
   id: number
   name: number
+  userId: number
   _all: number
 }
 
@@ -44,16 +47,19 @@ export type PersonCountAggregateOutputType = {
 export type PersonMinAggregateInputType = {
   id?: true
   name?: true
+  userId?: true
 }
 
 export type PersonMaxAggregateInputType = {
   id?: true
   name?: true
+  userId?: true
 }
 
 export type PersonCountAggregateInputType = {
   id?: true
   name?: true
+  userId?: true
   _all?: true
 }
 
@@ -132,6 +138,7 @@ export type PersonGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type PersonGroupByOutputType = {
   id: string
   name: string
+  userId: string
   _count: PersonCountAggregateOutputType | null
   _min: PersonMinAggregateOutputType | null
   _max: PersonMaxAggregateOutputType | null
@@ -158,13 +165,17 @@ export type PersonWhereInput = {
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   id?: Prisma.StringFilter<"Person"> | string
   name?: Prisma.StringFilter<"Person"> | string
+  userId?: Prisma.StringFilter<"Person"> | string
   transactions?: Prisma.TransactionListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PersonOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PersonWhereUniqueInput = Prisma.AtLeast<{
@@ -173,12 +184,15 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   OR?: Prisma.PersonWhereInput[]
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
+  userId?: Prisma.StringFilter<"Person"> | string
   transactions?: Prisma.TransactionListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "name">
 
 export type PersonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   _count?: Prisma.PersonCountOrderByAggregateInput
   _max?: Prisma.PersonMaxOrderByAggregateInput
   _min?: Prisma.PersonMinOrderByAggregateInput
@@ -190,17 +204,20 @@ export type PersonScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PersonScalarWhereWithAggregatesInput | Prisma.PersonScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Person"> | string
   name?: Prisma.StringWithAggregatesFilter<"Person"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"Person"> | string
 }
 
 export type PersonCreateInput = {
   id?: string
   name: string
   transactions?: Prisma.TransactionCreateNestedManyWithoutPersonInput
+  user: Prisma.UserCreateNestedOneWithoutPeopleInput
 }
 
 export type PersonUncheckedCreateInput = {
   id?: string
   name: string
+  userId: string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutPersonInput
 }
 
@@ -208,17 +225,20 @@ export type PersonUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   transactions?: Prisma.TransactionUpdateManyWithoutPersonNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPeopleNestedInput
 }
 
 export type PersonUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonCreateManyInput = {
   id?: string
   name: string
+  userId: string
 }
 
 export type PersonUpdateManyMutationInput = {
@@ -229,6 +249,17 @@ export type PersonUpdateManyMutationInput = {
 export type PersonUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PersonListRelationFilter = {
+  every?: Prisma.PersonWhereInput
+  some?: Prisma.PersonWhereInput
+  none?: Prisma.PersonWhereInput
+}
+
+export type PersonOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type PersonScalarRelationFilter = {
@@ -239,16 +270,61 @@ export type PersonScalarRelationFilter = {
 export type PersonCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type PersonMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type PersonMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+}
+
+export type PersonCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutUserInput, Prisma.PersonUncheckedCreateWithoutUserInput> | Prisma.PersonCreateWithoutUserInput[] | Prisma.PersonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutUserInput | Prisma.PersonCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.PersonCreateManyUserInputEnvelope
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+}
+
+export type PersonUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutUserInput, Prisma.PersonUncheckedCreateWithoutUserInput> | Prisma.PersonCreateWithoutUserInput[] | Prisma.PersonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutUserInput | Prisma.PersonCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.PersonCreateManyUserInputEnvelope
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+}
+
+export type PersonUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutUserInput, Prisma.PersonUncheckedCreateWithoutUserInput> | Prisma.PersonCreateWithoutUserInput[] | Prisma.PersonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutUserInput | Prisma.PersonCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.PersonUpsertWithWhereUniqueWithoutUserInput | Prisma.PersonUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.PersonCreateManyUserInputEnvelope
+  set?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  disconnect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  delete?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  update?: Prisma.PersonUpdateWithWhereUniqueWithoutUserInput | Prisma.PersonUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.PersonUpdateManyWithWhereWithoutUserInput | Prisma.PersonUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
+}
+
+export type PersonUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutUserInput, Prisma.PersonUncheckedCreateWithoutUserInput> | Prisma.PersonCreateWithoutUserInput[] | Prisma.PersonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutUserInput | Prisma.PersonCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.PersonUpsertWithWhereUniqueWithoutUserInput | Prisma.PersonUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.PersonCreateManyUserInputEnvelope
+  set?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  disconnect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  delete?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  update?: Prisma.PersonUpdateWithWhereUniqueWithoutUserInput | Prisma.PersonUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.PersonUpdateManyWithWhereWithoutUserInput | Prisma.PersonUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
 }
 
 export type PersonCreateNestedOneWithoutTransactionsInput = {
@@ -265,14 +341,62 @@ export type PersonUpdateOneRequiredWithoutTransactionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutTransactionsInput, Prisma.PersonUpdateWithoutTransactionsInput>, Prisma.PersonUncheckedUpdateWithoutTransactionsInput>
 }
 
+export type PersonCreateWithoutUserInput = {
+  id?: string
+  name: string
+  transactions?: Prisma.TransactionCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutUserInput = {
+  id?: string
+  name: string
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutUserInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutUserInput, Prisma.PersonUncheckedCreateWithoutUserInput>
+}
+
+export type PersonCreateManyUserInputEnvelope = {
+  data: Prisma.PersonCreateManyUserInput | Prisma.PersonCreateManyUserInput[]
+}
+
+export type PersonUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.PersonWhereUniqueInput
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutUserInput, Prisma.PersonUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutUserInput, Prisma.PersonUncheckedCreateWithoutUserInput>
+}
+
+export type PersonUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.PersonWhereUniqueInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutUserInput, Prisma.PersonUncheckedUpdateWithoutUserInput>
+}
+
+export type PersonUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.PersonScalarWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateManyMutationInput, Prisma.PersonUncheckedUpdateManyWithoutUserInput>
+}
+
+export type PersonScalarWhereInput = {
+  AND?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
+  OR?: Prisma.PersonScalarWhereInput[]
+  NOT?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
+  id?: Prisma.StringFilter<"Person"> | string
+  name?: Prisma.StringFilter<"Person"> | string
+  userId?: Prisma.StringFilter<"Person"> | string
+}
+
 export type PersonCreateWithoutTransactionsInput = {
   id?: string
   name: string
+  user: Prisma.UserCreateNestedOneWithoutPeopleInput
 }
 
 export type PersonUncheckedCreateWithoutTransactionsInput = {
   id?: string
   name: string
+  userId: string
 }
 
 export type PersonCreateOrConnectWithoutTransactionsInput = {
@@ -294,9 +418,33 @@ export type PersonUpdateToOneWithWhereWithoutTransactionsInput = {
 export type PersonUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPeopleNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PersonCreateManyUserInput = {
+  id?: string
+  name: string
+}
+
+export type PersonUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  transactions?: Prisma.TransactionUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -335,41 +483,55 @@ export type PersonCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.T
 export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  userId?: boolean
   transactions?: boolean | Prisma.Person$transactionsArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectScalar = {
   id?: boolean
   name?: boolean
+  userId?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "userId", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Person$transactionsArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type PersonIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type PersonIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Person"
   objects: {
     transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    userId: string
   }, ExtArgs["result"]["person"]>
   composites: {}
 }
@@ -765,6 +927,7 @@ readonly fields: PersonFieldRefs;
 export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transactions<T extends Prisma.Person$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -796,6 +959,7 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
 export interface PersonFieldRefs {
   readonly id: Prisma.FieldRef<"Person", 'String'>
   readonly name: Prisma.FieldRef<"Person", 'String'>
+  readonly userId: Prisma.FieldRef<"Person", 'String'>
 }
     
 
@@ -1043,6 +1207,10 @@ export type PersonCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many People.
    */
   data: Prisma.PersonCreateManyInput | Prisma.PersonCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1113,6 +1281,10 @@ export type PersonUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many People to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

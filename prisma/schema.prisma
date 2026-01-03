@@ -14,16 +14,20 @@ datasource db {
 }
 
 model User {
-  id            String        @id
-  name          String
-  email         String
-  emailVerified Boolean       @default(false)
-  image         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  transactions  Transaction[]
+  id              String           @id
+  name            String
+  email           String
+  emailVerified   Boolean          @default(false)
+  image           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  sessions        Session[]
+  accounts        Account[]
+  transactions    Transaction[]
+  expenseAccounts ExpenseAccount[]
+  tags            Tag[]
+  people          Person[]
+  categories      Category[]
 
   @@unique([email])
   @@map("user")
@@ -97,9 +101,11 @@ model ExpenseAccount {
   limit      Decimal? // Only for Credit Cards
   closingDay Int? // Day of month statement closes (1-31)
   dueDay     Int? // Day of month payment is due
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  transactions     Transaction[] @relation("SourceAccount")
-  receivedPayments Transaction[] @relation("DestinationAccount")
+  transactions     Transaction[] @relation("Account")
+  receivedPayments Transaction[] @relation("FromAccount")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -123,14 +129,16 @@ model Transaction {
 
   // The account the money is coming FROM
   accountId String
-  account   ExpenseAccount @relation("SourceAccount", fields: [accountId], references: [id], onDelete: Cascade)
+  account   ExpenseAccount @relation("Account", fields: [accountId], references: [id], onDelete: Cascade)
 
   // The account the money is going TO (Used for CC_PAYMENT)
-  destinationAccountId String?
-  destinationAccount   ExpenseAccount? @relation("DestinationAccount", fields: [destinationAccountId], references: [id])
+  fromAccountId String?         @map("fromAccountId")
+  fromAccount   ExpenseAccount? @relation("FromAccount", fields: [fromAccountId], references: [id])
 
-  personId String
-  person   Person @relation(fields: [personId], references: [id])
+  billingCycle String
+
+  personId String?
+  person   Person? @relation(fields: [personId], references: [id])
 
   tags      ExpenseTag[]
   createdAt DateTime     @default(now())
@@ -138,24 +146,13 @@ model Transaction {
   @@map("transactions")
 }
 
-model Card {
-  id           String    @id @default(uuid())
-  title        String
-  content      String?
-  isCreditCard Boolean   @default(false)
-  dueDate      DateTime?
-  limit        Float?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  @@map("card")
-}
-
 model Tag {
   id          String       @id @default(uuid())
   name        String       @unique
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   expenseTags ExpenseTag[]
 
   @@map("tag")
@@ -177,6 +174,8 @@ model Person {
   id           String        @id @default(uuid())
   name         String        @unique
   transactions Transaction[]
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("person")
 }
@@ -187,6 +186,8 @@ model Category {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("category")
 }

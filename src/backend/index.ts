@@ -2,7 +2,6 @@ import Elysia, { t } from "elysia";
 import { logger } from "@tqman/nice-logger";
 import { expenseAccounts } from "./routes/expense-accounts";
 import { transactions } from "./routes/transactions";
-import { cards } from "./routes/cards";
 import { tags } from "./routes/tags";
 import { people } from "./routes/people";
 import { categories } from "./routes/categories";
@@ -10,10 +9,12 @@ import { openapi } from '@elysiajs/openapi'
 
 
 import { authPlugin } from "./auth-plugin";
+import { auth } from "@/lib/auth";
 
 const api = new Elysia({
   prefix: "/api",
 })
+  .mount(auth.handler)
   .use(openapi())
   .use(logger({
     mode: "live", // "live" or "combined" (default: "combined")
@@ -34,7 +35,6 @@ const api = new Elysia({
   })
   .use(expenseAccounts)
   .use(transactions)
-  .use(cards)
   .use(tags)
   .use(people)
   .use(categories);

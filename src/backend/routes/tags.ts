@@ -9,8 +9,11 @@ export const tags = new Elysia({ prefix: "/tags" })
             name: t.String(),
         }),
     })
-    .get("/", async () => {
+    .get("/", async ({ user }) => {
         return await prisma.tag.findMany({
+            where: {
+                userId: user.id
+            },
             orderBy: { name: "asc" },
         });
     }, {
@@ -31,9 +34,12 @@ export const tags = new Elysia({ prefix: "/tags" })
             id: t.String(),
         }),
     })
-    .post("/", async ({ body }) => {
+    .post("/", async ({ body, user }) => {
         return await prisma.tag.create({
-            data: body,
+            data: {
+                ...body,
+                userId: user.id
+            },
         });
     }, {
         auth: true,

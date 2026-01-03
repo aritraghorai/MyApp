@@ -9,8 +9,11 @@ export const categories = new Elysia({ prefix: "/categories" })
             name: t.String(),
         }),
     })
-    .get("/", async () => {
+    .get("/", async ({ user }) => {
         return await prisma.category.findMany({
+            where: {
+                userId: user.id
+            },
             orderBy: { name: "asc" },
         });
     }, {
@@ -31,9 +34,12 @@ export const categories = new Elysia({ prefix: "/categories" })
             id: t.String(),
         }),
     })
-    .post("/", async ({ body }) => {
+    .post("/", async ({ body, user }) => {
         return await prisma.category.create({
-            data: body,
+            data: {
+                ...body,
+                userId: user.id
+            },
         });
     }, {
         auth: true,

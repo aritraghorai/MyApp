@@ -18,8 +18,11 @@ export const expenseAccounts = new Elysia({ prefix: "/expense-accounts" })
             dueDay: t.Optional(t.Number()),
         }),
     })
-    .get("/", async () => {
+    .get("/", async ({ user }) => {
         return await prisma.expenseAccount.findMany({
+            where: {
+                userId: user.id
+            },
             orderBy: { createdAt: "desc" },
         });
     }, {
@@ -40,9 +43,12 @@ export const expenseAccounts = new Elysia({ prefix: "/expense-accounts" })
             id: t.String(),
         }),
     })
-    .post("/", async ({ body }) => {
+    .post("/", async ({ body, user }) => {
         return await prisma.expenseAccount.create({
-            data: body,
+            data: {
+                ...body,
+                userId: user.id
+            },
         });
     }, {
         auth: true,
@@ -90,4 +96,4 @@ export const expenseAccounts = new Elysia({ prefix: "/expense-accounts" })
         params: t.Object({
             id: t.String(),
         }),
-    });
+    })

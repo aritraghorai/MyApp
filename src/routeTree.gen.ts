@@ -9,54 +9,149 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ExpensesRouteRouteImport } from './routes/expenses/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
+import { Route as ExpensesSettingsRouteImport } from './routes/expenses/settings'
+import { Route as ExpensesAccountsRouteImport } from './routes/expenses/accounts'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
+import { Route as ExpensesTransactionsIndexRouteImport } from './routes/expenses/transactions/index'
 
+const ExpensesRouteRoute = ExpensesRouteRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const ExpensesSettingsRoute = ExpensesSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const ExpensesAccountsRoute = ExpensesAccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
+  getParentRoute: () => ExpensesRouteRoute,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpensesTransactionsIndexRoute =
+  ExpensesTransactionsIndexRouteImport.update({
+    id: '/transactions/',
+    path: '/transactions/',
+    getParentRoute: () => ExpensesRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/expenses': typeof ExpensesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
+  '/expenses/accounts': typeof ExpensesAccountsRoute
+  '/expenses/settings': typeof ExpensesSettingsRoute
+  '/expenses/': typeof ExpensesIndexRoute
+  '/expenses/transactions': typeof ExpensesTransactionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/$': typeof ApiSplatRoute
+  '/expenses/accounts': typeof ExpensesAccountsRoute
+  '/expenses/settings': typeof ExpensesSettingsRoute
+  '/expenses': typeof ExpensesIndexRoute
+  '/expenses/transactions': typeof ExpensesTransactionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/expenses': typeof ExpensesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
+  '/expenses/accounts': typeof ExpensesAccountsRoute
+  '/expenses/settings': typeof ExpensesSettingsRoute
+  '/expenses/': typeof ExpensesIndexRoute
+  '/expenses/transactions/': typeof ExpensesTransactionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/$'
+  fullPaths:
+    | '/'
+    | '/expenses'
+    | '/api/$'
+    | '/expenses/accounts'
+    | '/expenses/settings'
+    | '/expenses/'
+    | '/expenses/transactions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/$'
-  id: '__root__' | '/' | '/api/$'
+  to:
+    | '/'
+    | '/api/$'
+    | '/expenses/accounts'
+    | '/expenses/settings'
+    | '/expenses'
+    | '/expenses/transactions'
+  id:
+    | '__root__'
+    | '/'
+    | '/expenses'
+    | '/api/$'
+    | '/expenses/accounts'
+    | '/expenses/settings'
+    | '/expenses/'
+    | '/expenses/transactions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExpensesRouteRoute: typeof ExpensesRouteRouteWithChildren
   ApiSplatRoute: typeof ApiSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/expenses': {
+      id: '/expenses'
+      path: '/expenses'
+      fullPath: '/expenses'
+      preLoaderRoute: typeof ExpensesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/expenses/': {
+      id: '/expenses/'
+      path: '/'
+      fullPath: '/expenses/'
+      preLoaderRoute: typeof ExpensesIndexRouteImport
+      parentRoute: typeof ExpensesRouteRoute
+    }
+    '/expenses/settings': {
+      id: '/expenses/settings'
+      path: '/settings'
+      fullPath: '/expenses/settings'
+      preLoaderRoute: typeof ExpensesSettingsRouteImport
+      parentRoute: typeof ExpensesRouteRoute
+    }
+    '/expenses/accounts': {
+      id: '/expenses/accounts'
+      path: '/accounts'
+      fullPath: '/expenses/accounts'
+      preLoaderRoute: typeof ExpensesAccountsRouteImport
+      parentRoute: typeof ExpensesRouteRoute
     }
     '/api/$': {
       id: '/api/$'
@@ -65,11 +160,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expenses/transactions/': {
+      id: '/expenses/transactions/'
+      path: '/transactions'
+      fullPath: '/expenses/transactions'
+      preLoaderRoute: typeof ExpensesTransactionsIndexRouteImport
+      parentRoute: typeof ExpensesRouteRoute
+    }
   }
 }
 
+interface ExpensesRouteRouteChildren {
+  ExpensesAccountsRoute: typeof ExpensesAccountsRoute
+  ExpensesSettingsRoute: typeof ExpensesSettingsRoute
+  ExpensesIndexRoute: typeof ExpensesIndexRoute
+  ExpensesTransactionsIndexRoute: typeof ExpensesTransactionsIndexRoute
+}
+
+const ExpensesRouteRouteChildren: ExpensesRouteRouteChildren = {
+  ExpensesAccountsRoute: ExpensesAccountsRoute,
+  ExpensesSettingsRoute: ExpensesSettingsRoute,
+  ExpensesIndexRoute: ExpensesIndexRoute,
+  ExpensesTransactionsIndexRoute: ExpensesTransactionsIndexRoute,
+}
+
+const ExpensesRouteRouteWithChildren = ExpensesRouteRoute._addFileChildren(
+  ExpensesRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExpensesRouteRoute: ExpensesRouteRouteWithChildren,
   ApiSplatRoute: ApiSplatRoute,
 }
 export const routeTree = rootRouteImport

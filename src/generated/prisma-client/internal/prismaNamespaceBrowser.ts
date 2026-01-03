@@ -57,7 +57,6 @@ export const ModelName = {
   Verification: 'Verification',
   ExpenseAccount: 'ExpenseAccount',
   Transaction: 'Transaction',
-  Card: 'Card',
   Tag: 'Tag',
   ExpenseTag: 'ExpenseTag',
   Person: 'Person',
@@ -143,6 +142,7 @@ export const ExpenseAccountScalarFieldEnum = {
   limit: 'limit',
   closingDay: 'closingDay',
   dueDay: 'dueDay',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -159,7 +159,8 @@ export const TransactionScalarFieldEnum = {
   userId: 'userId',
   categoryId: 'categoryId',
   accountId: 'accountId',
-  destinationAccountId: 'destinationAccountId',
+  fromAccountId: 'fromAccountId',
+  billingCycle: 'billingCycle',
   personId: 'personId',
   createdAt: 'createdAt'
 } as const
@@ -167,25 +168,12 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
-export const CardScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  isCreditCard: 'isCreditCard',
-  dueDate: 'dueDate',
-  limit: 'limit',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CardScalarFieldEnum = (typeof CardScalarFieldEnum)[keyof typeof CardScalarFieldEnum]
-
-
 export const TagScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
@@ -202,7 +190,8 @@ export type ExpenseTagScalarFieldEnum = (typeof ExpenseTagScalarFieldEnum)[keyof
 
 export const PersonScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  userId: 'userId'
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
@@ -212,7 +201,8 @@ export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]

@@ -11,6 +11,9 @@ importers:
       '@elysiajs/eden':
         specifier: ^1.4.6
         version: 1.4.6(elysia@1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3))
+      '@elysiajs/openapi':
+        specifier: ^1.4.13
+        version: 1.4.13(elysia@1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3))
       '@prisma/adapter-better-sqlite3':
         specifier: ^7.2.0
         version: 7.2.0
@@ -41,6 +44,9 @@ importers:
       '@tanstack/router-plugin':
         specifier: ^1.145.2
         version: 1.145.2(@tanstack/react-router@1.144.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
+      '@tqman/nice-logger':
+        specifier: ^1.1.1
+        version: 1.1.1(elysia@1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3))
       better-auth:
         specifier: ^1.4.9
         version: 1.4.9(a19c02f1515e1a2b25d4f1868cdb2272)
@@ -105,12 +111,18 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.7)
+      '@typescript/native-preview':
+        specifier: ^7.0.0-dev.20260102.1
+        version: 7.0.0-dev.20260103.1
       '@vitejs/plugin-react':
         specifier: ^5.1.2
         version: 5.1.2(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       jsdom:
         specifier: ^27.4.0
         version: 27.4.0
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -465,6 +477,11 @@ packages:
     resolution: {integrity: sha512-Tsa4NwXEWg/u73vWiYZQ3L5/ecgZSxqiEjYwpS+4qBKXeTZqZKl2hcgHJSVBL+InEDMi35Xugct7qyAXE5oM4Q==}
     peerDependencies:
       elysia: '>=1.4.19'
+
+  '@elysiajs/openapi@1.4.13':
+    resolution: {integrity: sha512-5BNI7yuFo8zjacTWA8a/wYE0tNZ4ecD7PAkeUDEU7lj6Iep0t2i5Rml6q4/+roM5oZFdtvvzoX4DH8zGKFEo0w==}
+    peerDependencies:
+      elysia: '>= 1.4.0'
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -1424,6 +1441,11 @@ packages:
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
 
+  '@tqman/nice-logger@1.1.1':
+    resolution: {integrity: sha512-/0PWFNXaUE3Lx9IQ8O0aurH+PW7x9GrCK/WyY4vVVWPz+fShijmt9vPCHLI226AZvwVfvU4BOIrQdCqzsBgeVg==}
+    peerDependencies:
+      elysia: '>=1.2.0'
+
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
 
@@ -1464,6 +1486,45 @@ packages:
 
   '@types/react@19.2.7':
     resolution: {integrity: sha512-MWtvHrGZLFttgeEj28VXHxpmwYbor/ATPYbBfSFZEIRK0ecCFLl2Qo55z52Hss+UV9CRN7trSeq1zbgx7YDWWg==}
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-uQba8AUGOJhYLBFhlHb6CCdswijEQNg9pNxriv3bRC6qyxRZKusDZk9+aLRIMKEOmza1t2ZT6rIR7yZV1SS/yg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-N/KRr6+Rs1On9gKMOQgg/cryLzDXdkUdy5TQz+kOzoZ5gtW7yx5to6hW2IS8RS3z8zcicn1awDnFcqBl5xL2hw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-ukDB/N8TkC3hvZyixdrDua7xfmtAbQbjicbK51toqaQCdgZtPWaq1+ttjTa9AN+TT36a4GFmXu/uEzMgHuUWug==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-vznk92yXxmRZQa6vM5cntI0DLg2dwRIVX/Ok7Mga+RCNspgC8RpstFxhSHJUp7wxqNTfhLnd0bEReJXbMLW1TQ==}
+    cpu: [arm]
+    os: [linux]
+
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-YRNUYt/G8q7E0UPEqOhUFg+5e5Kh0pBQ+0VbaEbHZHGo0XxzR5z1BcesXUa8yphCzF3JX/GiWPb+umHjYRARoA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-h5J4eVIXew7t6PStU9M3uueCoZ0+hDbNF8AvZtl1oKO2+fOiiA/k4krgz9Mfi2hb+yhemS3ZrLvrbW6FOlHmYA==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-EvT+ll/jP08iYhjaCgzJHta/ObGv7vBuPU24gHKPbBLBVvFJuzXWK6jnYqcGnQcGrVFh3o37dcBhLR7LdTKatw==}
+    cpu: [x64]
+    os: [win32]
+
+  '@typescript/native-preview@7.0.0-dev.20260103.1':
+    resolution: {integrity: sha512-gx+q8yi8GgvbKpQYJB2EBI0jHk8OJOySJ4xnVn019R6t5UhNkj6xcuArp+y1BJ3Mx8PigpURb+6WVGbSwuLWXQ==}
+    hasBin: true
 
   '@vitejs/plugin-react@5.1.2':
     resolution: {integrity: sha512-EcA07pHJouywpzsoTUqNh5NwGayl2PPVEJKUSinGGSxFGYn+shYbqMGBg6FXDqgXum9Ou/ecb+411ssw8HImJQ==}
@@ -3706,6 +3767,10 @@ snapshots:
     dependencies:
       elysia: 1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3)
 
+  '@elysiajs/openapi@1.4.13(elysia@1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3))':
+    dependencies:
+      elysia: 1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3)
+
   '@emnapi/core@1.7.1':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
@@ -4564,6 +4629,11 @@ snapshots:
 
   '@tokenizer/token@0.3.0': {}
 
+  '@tqman/nice-logger@1.1.1(elysia@1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3))':
+    dependencies:
+      elysia: 1.4.19(@sinclair/typebox@0.34.41)(exact-mirror@0.2.5(@sinclair/typebox@0.34.41))(file-type@21.1.1)(openapi-types@12.1.3)(typescript@5.9.3)
+      picocolors: 1.1.1
+
   '@tybys/wasm-util@0.10.1':
     dependencies:
       tslib: 2.8.1
@@ -4618,6 +4688,37 @@ snapshots:
   '@types/react@19.2.7':
     dependencies:
       csstype: 3.2.3
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260103.1':
+    optional: true
+
+  '@typescript/native-preview@7.0.0-dev.20260103.1':
+    optionalDependencies:
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260103.1
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260103.1
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260103.1
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260103.1
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260103.1
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260103.1
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260103.1
 
   '@vitejs/plugin-react@5.1.2(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))':
     dependencies:

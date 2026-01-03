@@ -9,8 +9,11 @@ export const people = new Elysia({ prefix: "/people" })
             name: t.String(),
         }),
     })
-    .get("/", async () => {
+    .get("/", async ({ user }) => {
         return await prisma.person.findMany({
+            where: {
+                userId: user.id
+            },
             orderBy: { name: "asc" },
         });
     }, {
@@ -31,9 +34,12 @@ export const people = new Elysia({ prefix: "/people" })
             id: t.String(),
         }),
     })
-    .post("/", async ({ body }) => {
+    .post("/", async ({ body, user }) => {
         return await prisma.person.create({
-            data: body,
+            data: {
+                ...body,
+                userId: user.id
+            }
         });
     }, {
         auth: true,

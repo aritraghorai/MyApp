@@ -70,11 +70,6 @@ export type ExpenseAccount = Prisma.ExpenseAccountModel
  */
 export type Transaction = Prisma.TransactionModel
 /**
- * Model Card
- * 
- */
-export type Card = Prisma.CardModel
-/**
  * Model Tag
  * 
  */

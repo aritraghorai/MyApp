@@ -390,7 +390,6 @@ export const ModelName = {
   Verification: 'Verification',
   ExpenseAccount: 'ExpenseAccount',
   Transaction: 'Transaction',
-  Card: 'Card',
   Tag: 'Tag',
   ExpenseTag: 'ExpenseTag',
   Person: 'Person',
@@ -410,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "expenseAccount" | "transaction" | "card" | "tag" | "expenseTag" | "person" | "category"
+    modelProps: "user" | "session" | "account" | "verification" | "expenseAccount" | "transaction" | "tag" | "expenseTag" | "person" | "category"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -858,80 +857,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Card: {
-      payload: Prisma.$CardPayload<ExtArgs>
-      fields: Prisma.CardFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.CardFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.CardFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>
-        }
-        findFirst: {
-          args: Prisma.CardFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.CardFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>
-        }
-        findMany: {
-          args: Prisma.CardFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>[]
-        }
-        create: {
-          args: Prisma.CardCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>
-        }
-        createMany: {
-          args: Prisma.CardCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.CardCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>[]
-        }
-        delete: {
-          args: Prisma.CardDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>
-        }
-        update: {
-          args: Prisma.CardUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>
-        }
-        deleteMany: {
-          args: Prisma.CardDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.CardUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.CardUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>[]
-        }
-        upsert: {
-          args: Prisma.CardUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CardPayload>
-        }
-        aggregate: {
-          args: Prisma.CardAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateCard>
-        }
-        groupBy: {
-          args: Prisma.CardGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.CardGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.CardCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.CardCountAggregateOutputType> | number
-        }
-      }
-    }
     Tag: {
       payload: Prisma.$TagPayload<ExtArgs>
       fields: Prisma.TagFieldRefs
@@ -1330,6 +1255,7 @@ export const ExpenseAccountScalarFieldEnum = {
   limit: 'limit',
   closingDay: 'closingDay',
   dueDay: 'dueDay',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1346,7 +1272,8 @@ export const TransactionScalarFieldEnum = {
   userId: 'userId',
   categoryId: 'categoryId',
   accountId: 'accountId',
-  destinationAccountId: 'destinationAccountId',
+  fromAccountId: 'fromAccountId',
+  billingCycle: 'billingCycle',
   personId: 'personId',
   createdAt: 'createdAt'
 } as const
@@ -1354,25 +1281,12 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
-export const CardScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  isCreditCard: 'isCreditCard',
-  dueDate: 'dueDate',
-  limit: 'limit',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CardScalarFieldEnum = (typeof CardScalarFieldEnum)[keyof typeof CardScalarFieldEnum]
-
-
 export const TagScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
@@ -1389,7 +1303,8 @@ export type ExpenseTagScalarFieldEnum = (typeof ExpenseTagScalarFieldEnum)[keyof
 
 export const PersonScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  userId: 'userId'
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
@@ -1399,7 +1314,8 @@ export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -1583,7 +1499,6 @@ export type GlobalOmitConfig = {
   verification?: Prisma.VerificationOmit
   expenseAccount?: Prisma.ExpenseAccountOmit
   transaction?: Prisma.TransactionOmit
-  card?: Prisma.CardOmit
   tag?: Prisma.TagOmit
   expenseTag?: Prisma.ExpenseTagOmit
   person?: Prisma.PersonOmit

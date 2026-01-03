@@ -17,6 +17,15 @@ export default function Header() {
                 My App
               </span>
             </Link>
+            <nav className="flex items-center space-x-6 text-sm font-medium">
+              <Link
+                to="/expenses"
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                activeProps={{ className: "text-foreground" }}
+              >
+                Expenses
+              </Link>
+            </nav>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             {

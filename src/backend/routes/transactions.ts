@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Elysia, t } from "elysia";
 import { authPlugin } from "../auth-plugin";
+import { getBilldingPeriodByDate } from "@/lib/utils";
 
 export const transactions = new Elysia({ prefix: "/transactions" })
     .use(authPlugin)
@@ -9,7 +10,6 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             amount: t.Number(),
             type: t.Enum({
                 OUTFLOW: "OUTFLOW",
-                CC_PAYMENT: "CC_PAYMENT",
                 INCOME: "INCOME",
             }),
             description: t.Optional(t.String()),
@@ -19,6 +19,17 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             destinationAccountId: t.Optional(t.String()),
             personId: t.String(),
             tagIds: t.Optional(t.Array(t.String())),
+        }),
+        paymentTransaction: t.Object({
+            amount: t.Number(),
+            type: t.Enum({
+                CC_PAYMENT: "CC_PAYMENT",
+            }),
+            categoryId: t.String(),
+            accountId: t.String(),
+            fromAccountId: t.String(),
+            billingCycle: t.String(),
+            personId: t.String(),
         }),
     })
     .get("/", async ({ query, user }) => {
@@ -47,7 +58,6 @@ export const transactions = new Elysia({ prefix: "/transactions" })
                 include: {
                     category: true,
                     account: true,
-                    destinationAccount: true,
                     person: true,
                     tags: {
                         include: {
@@ -86,7 +96,6 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             include: {
                 category: true,
                 account: true,
-                destinationAccount: true,
                 person: true,
                 tags: {
                     include: {
@@ -112,14 +121,33 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             id: t.String(),
         }),
     })
-    .post("/", async ({ body, user }) => {
-        const { tagIds, date, ...rest } = body;
+    .post("/", async ({ body, user, set }) => {
+        const { tagIds, date, type, ...rest } = body;
+
+        const accountId = rest.accountId;
+
+        const card = await prisma.expenseAccount.findUnique({ where: { id: accountId } });
+        if (!card) {
+            set.status = 404;
+            return "Account not found";
+        }
+
+        const tranDate = date ? new Date(date) : new Date();
+        let billingCycle = "";
+        if (card.type === "CREDIT_CARD") {
+            billingCycle = getBilldingPeriodByDate(tranDate, card.dueDay!);
+        } else {
+            billingCycle = getBilldingPeriodByDate(tranDate, -1);
+        }
+
 
         const transaction = await prisma.transaction.create({
             data: {
                 ...rest,
                 date: date ? new Date(date) : undefined,
                 userId: user.id,
+                type,
+                billingCycle,
             },
         });
 
@@ -138,7 +166,6 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             include: {
                 category: true,
                 account: true,
-                destinationAccount: true,
                 person: true,
                 tags: {
                     include: {
@@ -190,7 +217,6 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             include: {
                 category: true,
                 account: true,
-                destinationAccount: true,
                 person: true,
                 tags: {
                     include: {
@@ -239,4 +265,57 @@ export const transactions = new Elysia({ prefix: "/transactions" })
         params: t.Object({
             id: t.String(),
         }),
-    });
+    }).post("/payment", async ({ user, body }) => {
+        const { ...rest } = body;
+        const transaction = await prisma.transaction.create({
+            data: {
+                ...rest,
+                date: new Date(),
+                userId: user.id,
+                type: "CC_PAYMENT",
+            },
+        });
+
+        return await prisma.transaction.findUnique({
+            where: { id: transaction.id },
+            include: {
+                category: true,
+                account: true,
+                tags: {
+                    include: {
+                        tag: true
+                    }
+                }
+            }
+        });
+    }, {
+        auth: true,
+        body: "paymentTransaction"
+    }).get("/by-cycle", async ({ user, query: { billingCycle } }) => {
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                AND: [
+                    {
+                        userId: user.id,
+                    }, {
+                        billingCycle: billingCycle
+                    }
+                ]
+            },
+            include: {
+                category: true,
+                account: true,
+                tags: {
+                    include: {
+                        tag: true
+                    }
+                }
+            }
+        });
+        return transactions;
+    }, {
+        auth: true,
+        query: t.Object({
+            billingCycle: t.String()
+        })
+    })
