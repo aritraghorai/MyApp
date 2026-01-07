@@ -1,9 +1,14 @@
 services:
   personal-manager:
     build: .
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     env_file:
       - .env
     volumes:
       - ./dev.db:/app/dev.db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.personal-manager.rule=Host(`pm.dev.aritraghorai.in`)"
+      - "traefik.http.services.personal-manager.loadbalancer.server.port=3000"
+
