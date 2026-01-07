@@ -11,4 +11,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.personal-manager.rule=Host(`pm.dev.aritraghorai.in`)"
       - "traefik.http.services.personal-manager.loadbalancer.server.port=3000"
+    networks:
+      - proxy-network
+
+
+networks:
+  proxy-network:
+    external: true
+
 
