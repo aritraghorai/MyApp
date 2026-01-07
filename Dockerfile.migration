@@ -9,7 +9,7 @@ WORKDIR /app
 COPY prisma.config.ts ./
 
 # Install all dependencies (including devDependencies for prisma)
-RUN bun install prisma
+RUN bun install prisma dotenv
 
 # Copy prisma directory
 COPY prisma ./prisma
