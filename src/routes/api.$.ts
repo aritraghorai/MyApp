@@ -20,4 +20,4 @@ export const Route = createFileRoute("/api/$")({
 
 export const getTreaty = createIsomorphicFn()
   .server(() => treaty(api).api)
-  .client(() => treaty<typeof api>("localhost:3000").api);
+  .client(() => treaty<typeof api>(import.meta.env.VITE_API_URL).api);
