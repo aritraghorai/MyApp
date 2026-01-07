@@ -1,6 +1,7 @@
 services:
   personal-manager:
-    build: .
+    build:
+      context: .
     # ports:
     #   - "3000:3000"
     env_file:
@@ -14,9 +15,19 @@ services:
     networks:
       - proxy-network
 
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile.migration
+    env_file:
+      - .env
+    volumes:
+      - ./dev.db:/app/dev.db
+    networks:
+      - proxy-network
+    profiles:
+      - tools
 
 networks:
   proxy-network:
     external: true
-
-

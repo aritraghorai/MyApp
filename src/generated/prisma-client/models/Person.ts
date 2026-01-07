@@ -262,9 +262,9 @@ export type PersonOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type PersonScalarRelationFilter = {
-  is?: Prisma.PersonWhereInput
-  isNot?: Prisma.PersonWhereInput
+export type PersonNullableScalarRelationFilter = {
+  is?: Prisma.PersonWhereInput | null
+  isNot?: Prisma.PersonWhereInput | null
 }
 
 export type PersonCountOrderByAggregateInput = {
@@ -333,10 +333,12 @@ export type PersonCreateNestedOneWithoutTransactionsInput = {
   connect?: Prisma.PersonWhereUniqueInput
 }
 
-export type PersonUpdateOneRequiredWithoutTransactionsNestedInput = {
+export type PersonUpdateOneWithoutTransactionsNestedInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutTransactionsInput, Prisma.PersonUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutTransactionsInput
   upsert?: Prisma.PersonUpsertWithoutTransactionsInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
   connect?: Prisma.PersonWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutTransactionsInput, Prisma.PersonUpdateWithoutTransactionsInput>, Prisma.PersonUncheckedUpdateWithoutTransactionsInput>
 }

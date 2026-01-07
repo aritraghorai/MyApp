@@ -1,0 +1,20 @@
+FROM oven/bun:latest
+
+# Install build dependencies for native modules
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy manifests
+COPY package.json bun.lock ./
+
+COPY prisma.config.ts ./
+
+# Install all dependencies (including devDependencies for prisma)
+RUN bun install
+
+# Copy prisma directory
+COPY prisma ./prisma
+
+# Command to run migrations
+CMD ["bun", "run", "db:migrate"]
