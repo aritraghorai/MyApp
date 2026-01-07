@@ -60,6 +60,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
                     category: true,
                     account: true,
                     person: true,
+                    fromAccount: true,
                     tags: {
                         include: {
                             tag: true
@@ -99,6 +100,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
                 category: true,
                 account: true,
                 person: true,
+                fromAccount: true,
                 tags: {
                     include: {
                         tag: true
@@ -169,6 +171,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
                 category: true,
                 account: true,
                 person: true,
+                fromAccount: true,
                 tags: {
                     include: {
                         tag: true
@@ -220,6 +223,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
                 category: true,
                 account: true,
                 person: true,
+                fromAccount: true,
                 tags: {
                     include: {
                         tag: true
@@ -283,6 +287,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             include: {
                 category: true,
                 account: true,
+                fromAccount: true,
                 tags: {
                     include: {
                         tag: true
@@ -307,6 +312,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             include: {
                 category: true,
                 account: true,
+                fromAccount: true,
                 tags: {
                     include: {
                         tag: true

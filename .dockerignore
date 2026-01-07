@@ -1,0 +1,6 @@
+.output
+.env
+.git
+node_modules
+dev.db
+.tanstack

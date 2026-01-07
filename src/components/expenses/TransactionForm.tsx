@@ -15,9 +15,10 @@ interface TransactionFormProps {
     initialData?: any;
     onSubmit: (data: any) => Promise<void>;
     isSubmitting?: boolean;
+    onCancel?: () => void;
 }
 
-export function TransactionForm({ initialData, onSubmit, isSubmitting }: TransactionFormProps) {
+export function TransactionForm({ initialData, onSubmit, isSubmitting, onCancel }: TransactionFormProps) {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         amount: initialData?.amount || "",
@@ -348,7 +349,7 @@ export function TransactionForm({ initialData, onSubmit, isSubmitting }: Transac
             <div className="flex justify-end gap-4">
                 <button
                     type="button"
-                    onClick={() => navigate({ to: "/expenses/transactions", search: { page: 1, limit: 20 } })}
+                    onClick={onCancel}
                     className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                 >
                     Cancel

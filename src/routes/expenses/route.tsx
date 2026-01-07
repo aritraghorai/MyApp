@@ -30,6 +30,10 @@ function RouteComponent() {
     queryClient.invalidateQueries({ queryKey: ['expense-accounts'] })
   }
 
+  const toggleCreating = () => {
+    setIsCreating(!isCreating)
+  }
+
   const navItems = [
     { to: '/expenses', label: 'Dashboard', icon: LayoutDashboard, exact: true },
     { to: '/expenses/transactions', label: 'Transactions', icon: Receipt },
@@ -128,7 +132,7 @@ function RouteComponent() {
                 <X size={24} />
               </button>
             </div>
-            <TransactionForm onSubmit={handleCreate} />
+            <TransactionForm onSubmit={handleCreate} onCancel={toggleCreating} />
           </div>
         </div>
       )}

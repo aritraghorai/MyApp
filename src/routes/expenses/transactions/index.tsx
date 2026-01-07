@@ -4,7 +4,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useState } from "react";
 import { z } from "zod";
 import { getTreaty } from "@/routes/api.$";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,6 +12,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 const transactionSearchSchema = z.object({
   page: z.number().optional().default(1),
@@ -22,6 +39,10 @@ const transactionSearchSchema = z.object({
   type: z.enum(["OUTFLOW", "INCOME", "CC_PAYMENT"]).optional(),
   fromDate: z.string().optional(),
   toDate: z.string().optional(),
+  billingCycle: z.string().optional().default(() => {
+    const now = new Date();
+    return `${now.getMonth()}_${now.getFullYear()}`;
+  }),
 });
 
 export const Route = createFileRoute("/expenses/transactions/")({
@@ -29,16 +50,18 @@ export const Route = createFileRoute("/expenses/transactions/")({
   validateSearch: (search) => transactionSearchSchema.parse(search),
 });
 
+type TransactionResponse = Awaited<ReturnType<ReturnType<typeof getTreaty>["transactions"]["get"]>>;
+type Transaction = NonNullable<NonNullable<TransactionResponse>["data"]>["data"][number];
+
 function TransactionsList() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const [filters, setFilters] = useState(search);
 
-  const { data: transactionsData, refetch } = useQuery({
+  const { data: transactionsData, isLoading } = useQuery({
     queryKey: ["transactions", search],
     queryFn: async () => {
-      // @ts-ignore
-      const { data, error } = await getTreaty().transactions.index.get({
+      const { data, error } = await getTreaty().transactions.get({
         query: {
           page: search.page,
           limit: search.limit,
@@ -49,6 +72,7 @@ function TransactionsList() {
           type: search.type,
           fromDate: search.fromDate,
           toDate: search.toDate,
+          billingCycle: search.billingCycle,
         },
       });
       if (error) throw error;
@@ -59,8 +83,7 @@ function TransactionsList() {
   const { data: accounts } = useQuery({
     queryKey: ["expense-accounts"],
     queryFn: async () => {
-      // @ts-ignore
-      const { data, error } = await getTreaty().expenseAccounts.index.get();
+      const { data, error } = await getTreaty()["expense-accounts"].get();
       if (error) throw error;
       return data;
     },
@@ -69,8 +92,7 @@ function TransactionsList() {
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      // @ts-ignore
-      const { data, error } = await getTreaty().categories.index.get();
+      const { data, error } = await getTreaty().categories.get();
       if (error) throw error;
       return data;
     },
@@ -79,15 +101,46 @@ function TransactionsList() {
   const { data: people } = useQuery({
     queryKey: ["people"],
     queryFn: async () => {
-      // @ts-ignore
-      const { data, error } = await getTreaty().people.index.get();
+      const { data, error } = await getTreaty().people.get();
       if (error) throw error;
       return data;
     },
   });
 
-  const handleFilterChange = (key: keyof typeof filters, value: any) => {
-    const newFilters = { ...filters, [key]: value || undefined, page: 1 };
+  const handleFilterChange = (key: keyof typeof filters | "month" | "year", value: any) => {
+    if (value === "default") {
+      value = undefined;
+    }
+
+    let newFilters = { ...filters, page: 1 };
+
+    if (key === "month" || key === "year") {
+      const currentCycle = filters.billingCycle || "";
+      let [m, y] = currentCycle.split("_");
+
+      if (key === "month") m = value;
+      if (key === "year") y = value;
+
+      if (m && y) {
+        newFilters.billingCycle = `${m}_${y}`;
+      } else if (!m && !y) {
+        // @ts-ignore
+        newFilters.billingCycle = undefined;
+      } else {
+        // If only one is set, we still keep it in the cycle string or handle as partial
+        newFilters.billingCycle = `${m || ""}_${y || ""}`;
+      }
+
+      // Clean up if both are empty
+      if (newFilters.billingCycle === "_") {
+        // @ts-ignore
+        newFilters.billingCycle = undefined;
+      }
+    } else {
+      // @ts-ignore
+      newFilters[key] = value || undefined;
+    }
+
     setFilters(newFilters);
     navigate({ search: newFilters });
   };
@@ -101,23 +154,137 @@ function TransactionsList() {
     }
   };
 
+  const getTypeBadgeVariant = (type: string) => {
+    switch (type) {
+      case "INCOME": return "default";
+      case "CC_PAYMENT": return "secondary";
+      case "OUTFLOW": return "destructive";
+      default: return "outline";
+    }
+  };
+
+  const columns: ColumnDef<Transaction>[] = [
+    {
+      accessorKey: "date",
+      header: "Date",
+      cell: ({ row }) => {
+        return <div className="font-medium whitespace-nowrap">{new Date(row.getValue("date")).toLocaleDateString()}</div>;
+      },
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: ({ row }) => {
+        const type = row.getValue("type") as string;
+        return (
+          <Badge variant={getTypeBadgeVariant(type)} className="whitespace-nowrap">
+            {getTypeLabel(type)}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => {
+        return (
+          <div className="font-medium max-w-[200px] truncate">{row.getValue("description")}</div>
+        );
+      },
+    },
+    {
+      accessorKey: "billingCycle",
+      header: "Billing Cycle",
+      cell: ({ row }) => {
+        return (
+          <div className="font-medium max-w-[200px] truncate">{row.getValue("billingCycle")}</div>
+        );
+      },
+    },
+    {
+      accessorKey: "category",
+      header: "Category",
+      cell: ({ row }) => {
+        const category = row.original.category;
+        return <div className="text-muted-foreground">{category?.name || "-"}</div>;
+      },
+    },
+    {
+      accessorKey: "account",
+      header: "Account",
+      cell: ({ row }) => {
+        const transaction = row.original;
+        if (transaction.type === "CC_PAYMENT") {
+          return (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground truncate">{transaction.fromAccount?.name}</span>
+              <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
+              <span className="text-muted-foreground truncate">{transaction.account?.name}</span>
+            </div>
+          );
+        }
+        return <div className="text-muted-foreground">{transaction.account?.name}</div>;
+      },
+    },
+    {
+      accessorKey: "person",
+      header: "Person",
+      cell: ({ row }) => {
+        const person = row.original.person;
+        return <div className="text-muted-foreground">{person?.name || "-"}</div>;
+      },
+    },
+    {
+      accessorKey: "amount",
+      header: () => <div className="text-right">Amount</div>,
+      cell: ({ row }) => {
+        const transaction = row.original;
+        const amount = Number(transaction.amount);
+        const isIncome = transaction.type === "INCOME";
+        const isTransfer = transaction.type === "CC_PAYMENT";
+        const isOutflow = transaction.type === "OUTFLOW";
+
+        return (
+          <div
+            className={`text-right font-semibold whitespace-nowrap ${isIncome
+              ? "text-green-600 dark:text-green-400"
+              : isTransfer
+                ? "text-blue-600 dark:text-blue-400"
+                : "text-red-600 dark:text-red-400"
+              }`}
+          >
+            {isIncome ? "+" : isOutflow ? "-" : ""}
+            {formatCurrency(amount)}
+          </div>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data: transactionsData?.data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+  });
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Transactions</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Transactions</h1>
       </div>
 
-
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-wrap gap-4">
+      {/* Filters */}
+      <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3">
         <Select
           value={filters.type || ""}
           onValueChange={(value) => handleFilterChange("type", value)}
         >
-          <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL_TYPES">All Types</SelectItem>
+            <SelectItem value="default">All Types</SelectItem>
             <SelectItem value="OUTFLOW">Expense</SelectItem>
             <SelectItem value="INCOME">Income</SelectItem>
             <SelectItem value="CC_PAYMENT">Transfer / Payment</SelectItem>
@@ -128,11 +295,11 @@ function TransactionsList() {
           value={filters.accountId || ""}
           onValueChange={(value) => handleFilterChange("accountId", value)}
         >
-          <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="All Accounts" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL_ACCOUNTS">All Accounts</SelectItem>
+            <SelectItem value="default">All Accounts</SelectItem>
             {accounts?.map((account: any) => (
               <SelectItem key={account.id} value={account.id}>
                 {account.name}
@@ -145,11 +312,11 @@ function TransactionsList() {
           value={filters.categoryId || ""}
           onValueChange={(value) => handleFilterChange("categoryId", value)}
         >
-          <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL_CATEGORIES">All Categories</SelectItem>
+            <SelectItem value="default">All Categories</SelectItem>
             {categories?.map((category: any) => (
               <SelectItem key={category.id} value={category.id}>
                 {category.name}
@@ -162,11 +329,11 @@ function TransactionsList() {
           value={filters.personId || ""}
           onValueChange={(value) => handleFilterChange("personId", value)}
         >
-          <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="All People" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL_PEOPLE">All People</SelectItem>
+            <SelectItem value="default">All People</SelectItem>
             {people?.map((person: any) => (
               <SelectItem key={person.id} value={person.id}>
                 {person.name}
@@ -174,85 +341,208 @@ function TransactionsList() {
             ))}
           </SelectContent>
         </Select>
+
+        <div className="flex gap-2 w-full md:w-auto">
+          <Select
+            value={filters.billingCycle?.split("_")[0] || ""}
+            onValueChange={(value) => handleFilterChange("month", value)}
+          >
+            <SelectTrigger className="w-full md:w-[130px]">
+              <SelectValue placeholder="Month" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">All Months</SelectItem>
+              {Array.from({ length: 12 }).map((_, i) => (
+                <SelectItem key={i} value={i.toString()}>
+                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.billingCycle?.split("_")[1] || ""}
+            onValueChange={(value) => handleFilterChange("year", value)}
+          >
+            <SelectTrigger className="w-full md:w-[110px]">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">All Years</SelectItem>
+              {Array.from({ length: 10 }).map((_, i) => {
+                const year = new Date().getFullYear() - 5 + i;
+                return (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 dark:bg-gray-750 border-b border-gray-100 dark:border-gray-700">
-            <tr>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400">Date</th>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400">Type</th>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400">Description</th>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400">Category</th>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400">Account</th>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400">Person</th>
-              <th className="p-4 font-medium text-gray-500 dark:text-gray-400 text-right">Amount</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-            {transactionsData?.data?.map((transaction: any) => (
-              <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
-                <td className="p-4 text-gray-900 dark:text-white">
-                  {new Date(transaction.date).toLocaleDateString()}
-                </td>
-                <td className="p-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${transaction.type === "INCOME" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
-                    transaction.type === "CC_PAYMENT" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" :
-                      "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                    }`}>
-                    {getTypeLabel(transaction.type)}
-                  </span>
-                </td>
-                <td className="p-4 text-gray-900 dark:text-white">{transaction.description}</td>
-                <td className="p-4 text-gray-500 dark:text-gray-400">{transaction.category?.name || "-"}</td>
-                <td className="p-4 text-gray-500 dark:text-gray-400">
+      {/* Desktop Table View */}
+      <div className="hidden md:block rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Loading...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No transactions found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3">
+        {isLoading ? (
+          <Card>
+            <CardContent className="p-6 text-center text-muted-foreground">
+              Loading...
+            </CardContent>
+          </Card>
+        ) : transactionsData?.data?.length ? (
+          transactionsData.data.map((transaction: Transaction) => {
+            const isIncome = transaction.type === "INCOME";
+            const isTransfer = transaction.type === "CC_PAYMENT";
+            const isOutflow = transaction.type === "OUTFLOW";
+
+            return (
+              <Card key={transaction.id}>
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-base truncate">
+                        {transaction.description}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-0.5">
+                        {new Date(transaction.date).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div
+                      className={`font-bold text-lg whitespace-nowrap ${isIncome
+                        ? "text-green-600 dark:text-green-400"
+                        : isTransfer
+                          ? "text-blue-600 dark:text-blue-400"
+                          : "text-red-600 dark:text-red-400"
+                        }`}
+                    >
+                      {isIncome ? "+" : isOutflow ? "-" : ""}
+                      {formatCurrency(Number(transaction.amount))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Badge variant={getTypeBadgeVariant(transaction.type)} className="text-xs">
+                      {getTypeLabel(transaction.type)}
+                    </Badge>
+                    {transaction.category?.name && (
+                      <span className="text-xs text-muted-foreground">
+                        {transaction.category.name}
+                      </span>
+                    )}
+                  </div>
+
                   {transaction.type === "CC_PAYMENT" ? (
-                    <div className="flex items-center gap-2">
-                      <span>{transaction.account?.name}</span>
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                      <span>{transaction.destinationAccount?.name}</span>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span className="truncate">{transaction.fromAccount?.name}</span>
+                      <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                      <span className="truncate">{transaction.account?.name}</span>
                     </div>
                   ) : (
-                    transaction.account?.name
+                    <div className="text-sm text-muted-foreground">
+                      {transaction.account?.name}
+                      {transaction.person?.name && ` • ${transaction.person.name}`}
+                    </div>
                   )}
-                </td>
-                <td className="p-4 text-gray-500 dark:text-gray-400">{transaction.person?.name || "-"}</td>
-                <td
-                  className={`p-4 text-right font-medium ${transaction.type === "INCOME" ? "text-green-600 dark:text-green-400" :
-                    transaction.type === "CC_PAYMENT" ? "text-blue-600 dark:text-blue-400" :
-                      "text-red-600 dark:text-red-400"
-                    }`}
-                >
-                  {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
-                  {formatCurrency(Number(transaction.amount))}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {!transactionsData?.data?.length && (
-          <p className="p-8 text-center text-gray-500 dark:text-gray-400">No transactions found</p>
+                </CardContent>
+              </Card>
+            );
+          })
+        ) : (
+          <Card>
+            <CardContent className="p-6 text-center text-muted-foreground">
+              No transactions found
+            </CardContent>
+          </Card>
         )}
       </div>
 
-      <div className="flex justify-between items-center">
-        <button
-          disabled={search.page <= 1}
-          onClick={() => handleFilterChange("page", search.page - 1)}
-          className="px-4 py-2 border rounded-lg disabled:opacity-50 dark:border-gray-600 dark:text-white"
-        >
-          Previous
-        </button>
-        <span className="text-gray-500 dark:text-gray-400">
+      {/* Pagination */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="text-sm text-muted-foreground">
           Page {search.page} of {transactionsData?.meta?.totalPages || 1}
-        </span>
-        <button
-          disabled={search.page >= (transactionsData?.meta?.totalPages || 1)}
-          onClick={() => handleFilterChange("page", search.page + 1)}
-          className="px-4 py-2 border rounded-lg disabled:opacity-50 dark:border-gray-600 dark:text-white"
-        >
-          Next
-        </button>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleFilterChange("page", search.page - 1)}
+            disabled={search.page <= 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="hidden sm:inline ml-1">Previous</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleFilterChange("page", search.page + 1)}
+            disabled={search.page >= (transactionsData?.meta?.totalPages || 1)}
+          >
+            <span className="hidden sm:inline mr-1">Next</span>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

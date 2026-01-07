@@ -17,9 +17,17 @@ const api = new Elysia({
   .mount(auth.handler)
   .use(openapi())
   .use(logger({
-    mode: "live", // "live" or "combined" (default: "combined")
+    mode: "combined", // "live" or "combined" (default: "combined")
     withTimestamp: true, // optional (default: false)
+    withBanner: true, // optional (default: false)
   }))
+  //log requests
+  .onBeforeHandle(({ path, query }) => {
+    console.log(`[ ${path}`);
+    if (Object.keys(query).length) {
+      console.log(`   Query: ${JSON.stringify(query)}`);
+    }
+  })
   .use(authPlugin)
   .get("/", () => {
     console.log(process.env);
