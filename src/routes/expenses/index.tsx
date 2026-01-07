@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { getTreaty } from "../api.$";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "@/lib/utils";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, TrendingUp, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/expenses/")({
@@ -11,19 +11,40 @@ export const Route = createFileRoute("/expenses/")({
 
 function ExpensesDashboard() {
   const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
+  const [selectedMonth, setSelectedMonth] = useState(() => now.getMonth().toString());
+  const [selectedYear, setSelectedYear] = useState(() => now.getFullYear().toString());
+
+  const selectedCycle = useMemo(() => `${selectedMonth}_${selectedYear}`, [selectedMonth, selectedYear]);
+
+  const months = useMemo(() => [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ], []);
+
+  const years = useMemo(() => {
+    const currentYear = now.getFullYear();
+    const years = [];
+    for (let i = 0; i < 5; i++) {
+      years.push((currentYear - i).toString());
+    }
+    return years;
+  }, []);
+
+  const formatCycleName = (cycle: string) => {
+    const [m, y] = cycle.split("_");
+    const date = new Date(parseInt(y), parseInt(m), 1);
+    return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  };
 
   const { data: transactionsData } = useQuery({
-    queryKey: ["dashboard-transactions", startOfMonth, endOfMonth],
+    queryKey: ["dashboard-transactions", selectedCycle],
     queryFn: async () => {
       // @ts-ignore
       const { data, error } = await getTreaty().transactions.index.get({
         query: {
-          limit: 1000, // Fetch enough for the month
+          limit: 1000, // Fetch enough for the cycle
           page: 1,
-          fromDate: startOfMonth,
-          toDate: endOfMonth,
+          billingCycle: selectedCycle,
         },
       });
       if (error) throw error;
@@ -42,12 +63,31 @@ function ExpensesDashboard() {
 
     // Category Breakdown
     const byCategory: Record<string, number> = {};
+    const byPerson: Record<string, number> = {};
+    const byAccount: Record<string, number> = {};
+
     txs.filter((t: any) => t.type === "OUTFLOW").forEach((t: any) => {
       const catName = t.category?.name || "Uncategorized";
       byCategory[catName] = (byCategory[catName] || 0) + Number(t.amount);
+
+      const personName = t.person?.name || "No Person";
+      byPerson[personName] = (byPerson[personName] || 0) + Number(t.amount);
+
+      const accountName = t.account?.name || "Unknown Account";
+      byAccount[accountName] = (byAccount[accountName] || 0) + Number(t.amount);
     });
 
     const topCategories = Object.entries(byCategory)
+      .map(([name, amount]) => ({ name, amount }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5);
+
+    const topPeople = Object.entries(byPerson)
+      .map(([name, amount]) => ({ name, amount }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5);
+
+    const topAccounts = Object.entries(byAccount)
       .map(([name, amount]) => ({ name, amount }))
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 5);
@@ -69,6 +109,8 @@ function ExpensesDashboard() {
       expense,
       net: income - expense,
       topCategories,
+      topPeople,
+      topAccounts,
       daily,
       maxDaily,
     };
@@ -80,15 +122,39 @@ function ExpensesDashboard() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
-            {now.toLocaleDateString("en-US", { month: "long", year: "numeric" })} Overview
+            Overview for {formatCycleName(selectedCycle)}
           </p>
         </div>
-        <Link
-          to="/expenses/transactions"
-          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-        >
-          View All Transactions
-        </Link>
+        <div className="flex items-center gap-3">
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {months.map((month, index) => (
+              <option key={index} value={index}>
+                {month}
+              </option>
+            ))}
+          </select>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+          <Link
+            to="/expenses/transactions"
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            View All Transactions
+          </Link>
+        </div>
       </div>
 
       {/* Summary Cards */}
@@ -180,6 +246,56 @@ function ExpensesDashboard() {
             ))}
             {stats.topCategories.length === 0 && (
               <p className="text-gray-500 dark:text-gray-400 text-center py-8">No expenses yet</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Spend by Person */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Spend by Person</h3>
+          <div className="space-y-6">
+            {stats.topPeople.map((person, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">{person.name}</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{formatCurrency(person.amount)}</span>
+                </div>
+                <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-green-500 rounded-full"
+                    style={{ width: `${(person.amount / (stats.expense || 1)) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+            {stats.topPeople.length === 0 && (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available</p>
+            )}
+          </div>
+        </div>
+
+        {/* Spend by Account */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Spend by Account</h3>
+          <div className="space-y-6">
+            {stats.topAccounts.map((account, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">{account.name}</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{formatCurrency(account.amount)}</span>
+                </div>
+                <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-purple-500 rounded-full"
+                    style={{ width: `${(account.amount / (stats.expense || 1)) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+            {stats.topAccounts.length === 0 && (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available</p>
             )}
           </div>
         </div>

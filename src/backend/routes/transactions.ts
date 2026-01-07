@@ -33,7 +33,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
         }),
     })
     .get("/", async ({ query, user }) => {
-        const { page = 1, limit = 20, accountId, categoryId, personId, fromDate, toDate } = query;
+        const { page = 1, limit = 20, accountId, categoryId, personId, fromDate, toDate, billingCycle } = query;
         const skip = (Number(page) - 1) * Number(limit);
 
         const where: any = {
@@ -43,6 +43,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
         if (accountId) where.accountId = accountId;
         if (categoryId) where.categoryId = categoryId;
         if (personId) where.personId = personId;
+        if (billingCycle) where.billingCycle = billingCycle;
         if (fromDate || toDate) {
             where.date = {};
             if (fromDate) where.date.gte = new Date(fromDate);
@@ -88,6 +89,7 @@ export const transactions = new Elysia({ prefix: "/transactions" })
             personId: t.Optional(t.String()),
             fromDate: t.Optional(t.String()),
             toDate: t.Optional(t.String()),
+            billingCycle: t.Optional(t.String()),
         }),
     })
     .get("/:id", async ({ params: { id }, user, set }) => {
