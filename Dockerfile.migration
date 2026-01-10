@@ -15,8 +15,8 @@ set -e\n\
 \n\
 echo "Starting migration process..."\n\
 \n\
-# Set default DATABASE_URL if not provided\n\
-export DATABASE_URL="${DATABASE_URL:-file:/app/dev.db}"\n\
+# Set default DATABASE_URL if not provided (use relative path)\n\
+export DATABASE_URL="${DATABASE_URL:-file:./dev.db}"\n\
 \n\
 echo "Database URL: $DATABASE_URL"\n\
 \n\
