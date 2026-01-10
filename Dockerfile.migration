@@ -9,36 +9,47 @@ RUN bun install prisma @prisma/client dotenv
 COPY prisma ./prisma
 COPY prisma.config.ts ./
 
-# Create migration script
-RUN printf '#!/bin/bash\n\
-set -e\n\
-\n\
-echo "Starting migration process..."\n\
-\n\
-# Set default DATABASE_URL if not provided (use relative path)\n\
-export DATABASE_URL="${DATABASE_URL:-file:./dev.db}"\n\
-\n\
-echo "Database URL: $DATABASE_URL"\n\
-\n\
-# Ensure database directory exists\n\
-mkdir -p /app\n\
-\n\
-# Check if database file exists, create if not\n\
-if [ ! -f /app/dev.db ]; then\n\
-    echo "Database file does not exist. Creating..."\n\
-    touch /app/dev.db\n\
-    chmod 666 /app/dev.db\n\
-fi\n\
-\n\
-# Generate Prisma Client\n\
-echo "Generating Prisma Client..."\n\
-bun prisma generate\n\
-\n\
-# Run migrations (use deploy for production)\n\
-echo "Running migrations..."\n\
-bun prisma migrate deploy\n\
-\n\
-echo "Migration completed successfully!"\n' > /app/migrate.sh
+# Create migration script using a simpler approach
+RUN cat > /app/migrate.sh << 'SCRIPT'
+#!/bin/bash
+set -e
+
+echo "Starting migration process..."
+
+# Set DATABASE_URL (use from env or default with absolute path)
+if [ -z "$DATABASE_URL" ]; then
+    export DATABASE_URL="file:///app/dev.db"
+    echo "Using default DATABASE_URL: $DATABASE_URL"
+else
+    echo "Using provided DATABASE_URL: $DATABASE_URL"
+fi
+
+# Create .env file for prisma.config.ts
+printf "DATABASE_URL=%s\n" "$DATABASE_URL" > /app/.env
+echo "Created .env file for Prisma config"
+echo "Contents of .env file:"
+cat /app/.env
+
+# Ensure database directory exists
+mkdir -p /app
+
+# Check if database file exists, create if not
+if [ ! -f /app/dev.db ]; then
+    echo "Database file does not exist. Creating..."
+    touch /app/dev.db
+    chmod 666 /app/dev.db
+fi
+
+# Generate Prisma Client
+echo "Generating Prisma Client..."
+bun prisma generate
+
+# Run migrations
+echo "Running migrations..."
+bun prisma migrate deploy
+
+echo "Migration completed successfully!"
+SCRIPT
 
 RUN chmod +x /app/migrate.sh
 
