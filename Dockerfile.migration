@@ -1,18 +1,47 @@
 FROM oven/bun:latest
 
-# Install build dependencies for native modules
-
 WORKDIR /app
 
-# Copy manifests
+# Install Prisma CLI and dotenv
+RUN bun install prisma @prisma/client dotenv
 
+# Copy prisma files
+COPY prisma ./prisma
 COPY prisma.config.ts ./
 
-# Install all dependencies (including devDependencies for prisma)
-RUN bun install prisma dotenv
+# Create migration script
+RUN cat > /app/migrate.sh << 'EOF'
+#!/bin/bash
+set -e
 
-# Copy prisma directory
-COPY prisma ./prisma
+echo "Starting migration process..."
 
-# Command to run migrations
-CMD ["bun", "prisma", "migrate","dev"]
+# Set default DATABASE_URL if not provided
+export DATABASE_URL="${DATABASE_URL:-file:/app/dev.db}"
+
+echo "Database URL: $DATABASE_URL"
+
+# Ensure database directory exists
+mkdir -p /app
+
+# Check if database file exists, create if not
+if [ ! -f /app/dev.db ]; then
+    echo "Database file doesn't exist. Creating..."
+    touch /app/dev.db
+    chmod 666 /app/dev.db
+fi
+
+# Generate Prisma Client
+echo "Generating Prisma Client..."
+bun prisma generate
+
+# Run migrations (use deploy for production)
+echo "Running migrations..."
+bun prisma migrate deploy
+
+echo "Migration completed successfully!"
+EOF
+
+RUN chmod +x /app/migrate.sh
+
+CMD ["/app/migrate.sh"]
