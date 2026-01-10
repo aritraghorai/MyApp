@@ -10,37 +10,35 @@ COPY prisma ./prisma
 COPY prisma.config.ts ./
 
 # Create migration script
-RUN cat > /app/migrate.sh << 'EOF'
-#!/bin/bash
-set -e
-
-echo "Starting migration process..."
-
-# Set default DATABASE_URL if not provided
-export DATABASE_URL="${DATABASE_URL:-file:/app/dev.db}"
-
-echo "Database URL: $DATABASE_URL"
-
-# Ensure database directory exists
-mkdir -p /app
-
-# Check if database file exists, create if not
-if [ ! -f /app/dev.db ]; then
-    echo "Database file doesn't exist. Creating..."
-    touch /app/dev.db
-    chmod 666 /app/dev.db
-fi
-
-# Generate Prisma Client
-echo "Generating Prisma Client..."
-bun prisma generate
-
-# Run migrations (use deploy for production)
-echo "Running migrations..."
-bun prisma migrate deploy
-
-echo "Migration completed successfully!"
-EOF
+RUN printf '#!/bin/bash\n\
+set -e\n\
+\n\
+echo "Starting migration process..."\n\
+\n\
+# Set default DATABASE_URL if not provided\n\
+export DATABASE_URL="${DATABASE_URL:-file:/app/dev.db}"\n\
+\n\
+echo "Database URL: $DATABASE_URL"\n\
+\n\
+# Ensure database directory exists\n\
+mkdir -p /app\n\
+\n\
+# Check if database file exists, create if not\n\
+if [ ! -f /app/dev.db ]; then\n\
+    echo "Database file does not exist. Creating..."\n\
+    touch /app/dev.db\n\
+    chmod 666 /app/dev.db\n\
+fi\n\
+\n\
+# Generate Prisma Client\n\
+echo "Generating Prisma Client..."\n\
+bun prisma generate\n\
+\n\
+# Run migrations (use deploy for production)\n\
+echo "Running migrations..."\n\
+bun prisma migrate deploy\n\
+\n\
+echo "Migration completed successfully!"\n' > /app/migrate.sh
 
 RUN chmod +x /app/migrate.sh
 
