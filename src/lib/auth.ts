@@ -16,6 +16,7 @@ const genericOAuthProvider = () =>
         scopes: ["openid", "profile", "email"],
         discoveryUrl: `${process.env.AUTHELIA_ISSUER_URL}/.well-known/openid-configuration`,
         pkce: true,
+        redirectURI: process.env.FRONTEND_URL,
       },
     ],
   });
