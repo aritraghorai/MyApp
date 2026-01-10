@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getTreaty } from "../api.$";
+import { getTreaty } from "../../api.$";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "@/lib/utils";
 import { useState } from "react";
 import { Plus, Wallet, Building2, CreditCard, X } from "lucide-react";
 
-export const Route = createFileRoute("/expenses/accounts")({
+export const Route = createFileRoute("/_authed/expenses/accounts")({
   component: AccountsManagement,
 });
 

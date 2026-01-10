@@ -1,21 +1,30 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getTreaty } from "../api.$";
+import { getTreaty } from "../../api.$";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "@/lib/utils";
 import { useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, TrendingUp, Wallet, Calendar, Eye, AlertCircle, Loader2 } from "lucide-react";
+import { ArrowDown, ArrowUp, TrendingUp, Wallet, Calendar, Eye, AlertCircle, Loader2, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
-export const Route = createFileRoute("/expenses/")({
+export const Route = createFileRoute("/_authed/expenses/")({
   component: ExpensesDashboard,
   ssr: true,
 });
 
-const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
+const COLORS = [
+  'hsl(217, 91%, 60%)',   // Blue
+  'hsl(0, 84%, 60%)',     // Red
+  'hsl(142, 71%, 45%)',   // Green
+  'hsl(38, 92%, 50%)',    // Orange
+  'hsl(271, 76%, 53%)',   // Purple
+  'hsl(328, 86%, 70%)',   // Pink
+  'hsl(189, 94%, 43%)',   // Cyan
+  'hsl(84, 81%, 44%)',    // Lime
+];
 
 function ExpensesDashboard() {
   const now = new Date();
@@ -132,7 +141,7 @@ function ExpensesDashboard() {
   if (isError) {
     return (
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="border-red-500/50 bg-red-50 dark:bg-red-950/20">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
@@ -140,7 +149,11 @@ function ExpensesDashboard() {
           </AlertDescription>
         </Alert>
         <div className="flex justify-center">
-          <Button onClick={() => window.location.reload()} variant="outline">
+          <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            className="hover:scale-105 transition-transform"
+          >
             Retry
           </Button>
         </div>
@@ -152,27 +165,32 @@ function ExpensesDashboard() {
     return (
       <div className="p-6 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
-          <p className="text-muted-foreground">Loading your dashboard...</p>
+          <div className="relative">
+            <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
+            <Sparkles className="h-6 w-6 absolute top-0 right-0 text-primary/50 animate-pulse" />
+          </div>
+          <p className="text-muted-foreground font-medium">Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 space-y-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1 flex items-center gap-2">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+            Dashboard
+          </h1>
+          <p className="text-muted-foreground flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            {formatCycleName(selectedCycle)}
+            <span className="font-medium">{formatCycleName(selectedCycle)}</span>
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] hover:border-primary/50 transition-colors">
               <SelectValue placeholder="Month" />
             </SelectTrigger>
             <SelectContent>
@@ -185,7 +203,7 @@ function ExpensesDashboard() {
           </Select>
 
           <Select value={selectedYear} onValueChange={setSelectedYear}>
-            <SelectTrigger className="w-[110px]">
+            <SelectTrigger className="w-[110px] hover:border-primary/50 transition-colors">
               <SelectValue placeholder="Year" />
             </SelectTrigger>
             <SelectContent>
@@ -197,10 +215,11 @@ function ExpensesDashboard() {
             </SelectContent>
           </Select>
 
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="hover:scale-105 transition-transform">
             <Link to="/expenses/transactions" search={{
               page: 1,
               limit: 1000,
+              billingCycle: selectedCycle,
             }}>
               <Eye className="mr-2 h-4 w-4" />
               View All
@@ -210,55 +229,70 @@ function ExpensesDashboard() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 p-6 opacity-5">
-            <ArrowUp size={80} className="text-green-500" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Income Card */}
+        <Card className="relative overflow-hidden border-green-500/20 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 hover:shadow-lg hover:shadow-green-500/10 transition-all duration-300 hover:scale-[1.02]">
+          <div className="absolute right-0 top-0 p-6 opacity-10">
+            <ArrowUp size={100} className="text-green-500" />
           </div>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Income</CardDescription>
-            <CardTitle className="text-3xl">{formatCurrency(stats.income)}</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
+          <CardHeader className="pb-3 relative">
+            <CardDescription className="text-green-700 dark:text-green-400 font-medium">Total Income</CardDescription>
+            <CardTitle className="text-4xl font-bold text-green-600 dark:text-green-400">
+              {formatCurrency(stats.income)}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="inline-flex items-center rounded-md border border-green-200 bg-green-50 px-2.5 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-950 dark:text-green-400 dark:border-green-800">
-              <TrendingUp className="h-3 w-3 mr-1" />
+          <CardContent className="relative">
+            <div className="inline-flex items-center rounded-full border-2 border-green-300 bg-green-100 px-3 py-1 text-xs font-bold text-green-700 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700 shadow-sm">
+              <TrendingUp className="h-3.5 w-3.5 mr-1.5" />
               Inflow
             </div>
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 p-6 opacity-5">
-            <ArrowDown size={80} className="text-red-500" />
+        {/* Expenses Card */}
+        <Card className="relative overflow-hidden border-red-500/20 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 hover:shadow-lg hover:shadow-red-500/10 transition-all duration-300 hover:scale-[1.02]">
+          <div className="absolute right-0 top-0 p-6 opacity-10">
+            <ArrowDown size={100} className="text-red-500" />
           </div>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Expenses</CardDescription>
-            <CardTitle className="text-3xl">{formatCurrency(stats.expense)}</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent" />
+          <CardHeader className="pb-3 relative">
+            <CardDescription className="text-red-700 dark:text-red-400 font-medium">Total Expenses</CardDescription>
+            <CardTitle className="text-4xl font-bold text-red-600 dark:text-red-400">
+              {formatCurrency(stats.expense)}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="inline-flex items-center rounded-md border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-950 dark:text-red-400 dark:border-red-800">
-              <ArrowDown className="h-3 w-3 mr-1" />
+          <CardContent className="relative">
+            <div className="inline-flex items-center rounded-full border-2 border-red-300 bg-red-100 px-3 py-1 text-xs font-bold text-red-700 dark:bg-red-900/50 dark:text-red-300 dark:border-red-700 shadow-sm">
+              <ArrowDown className="h-3.5 w-3.5 mr-1.5" />
               Outflow
             </div>
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 p-6 opacity-5">
-            <Wallet size={80} className="text-blue-500" />
+        {/* Net Balance Card */}
+        <Card className={`relative overflow-hidden transition-all duration-300 hover:scale-[1.02] ${stats.net >= 0
+          ? 'border-blue-500/20 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 hover:shadow-lg hover:shadow-blue-500/10'
+          : 'border-orange-500/20 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 hover:shadow-lg hover:shadow-orange-500/10'
+          }`}>
+          <div className="absolute right-0 top-0 p-6 opacity-10">
+            <Wallet size={100} className={stats.net >= 0 ? 'text-blue-500' : 'text-orange-500'} />
           </div>
-          <CardHeader className="pb-2">
-            <CardDescription>Net Balance</CardDescription>
-            <CardTitle className={`text-3xl ${stats.net >= 0 ? '' : 'text-red-600 dark:text-red-400'}`}>
+          <div className={`absolute inset-0 bg-gradient-to-br ${stats.net >= 0 ? 'from-blue-500/5' : 'from-orange-500/5'} to-transparent`} />
+          <CardHeader className="pb-3 relative">
+            <CardDescription className={stats.net >= 0 ? 'text-blue-700 dark:text-blue-400 font-medium' : 'text-orange-700 dark:text-orange-400 font-medium'}>
+              Net Balance
+            </CardDescription>
+            <CardTitle className={`text-4xl font-bold ${stats.net >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-orange-600 dark:text-orange-400'}`}>
               {formatCurrency(stats.net)}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className={`inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold ${stats.net >= 0
-              ? "border-blue-200 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800"
-              : "border-red-200 bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-400 dark:border-red-800"
+          <CardContent className="relative">
+            <div className={`inline-flex items-center rounded-full border-2 px-3 py-1 text-xs font-bold shadow-sm ${stats.net >= 0
+              ? "border-blue-300 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-700"
+              : "border-orange-300 bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 dark:border-orange-700"
               }`}>
-              <Wallet className="h-3 w-3 mr-1" />
+              <Wallet className="h-3.5 w-3.5 mr-1.5" />
               {stats.net >= 0 ? 'Saved' : 'Deficit'}
             </div>
           </CardContent>
@@ -267,24 +301,28 @@ function ExpensesDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Daily Activity Chart */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
-            <CardTitle>Daily Spending</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                Daily Spending
+              </span>
+            </CardTitle>
             <CardDescription>Track your daily expenses throughout the month</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-end gap-1 sm:gap-2">
+            <div className="h-64 flex items-end gap-1 sm:gap-2 p-4 bg-gradient-to-t from-primary/5 to-transparent rounded-lg">
               {stats.daily.map((amount, index) => (
                 <div key={index} className="flex-1 flex flex-col justify-end group relative h-full">
                   <div
-                    className="w-full bg-primary/20 rounded-t-sm hover:bg-primary transition-all duration-300 relative"
+                    className="w-full bg-gradient-to-t from-primary/30 to-primary/60 rounded-t-md hover:from-primary hover:to-primary/80 transition-all duration-300 relative shadow-sm hover:shadow-md"
                     style={{ height: `${(amount / stats.maxDaily) * 100}%` }}
                   >
-                    <div className="opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded border shadow-sm whitespace-nowrap z-10 pointer-events-none transition-opacity">
+                    <div className="opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-popover text-popover-foreground text-xs rounded-md border shadow-lg whitespace-nowrap z-10 pointer-events-none transition-opacity font-medium">
                       Day {index + 1}: {formatCurrency(amount)}
                     </div>
                   </div>
-                  <div className="text-[10px] text-muted-foreground text-center mt-2 hidden sm:block">
+                  <div className="text-[10px] text-muted-foreground text-center mt-2 hidden sm:block font-medium">
                     {(index + 1) % 5 === 0 || index === 0 ? index + 1 : ''}
                   </div>
                 </div>
@@ -294,22 +332,24 @@ function ExpensesDashboard() {
         </Card>
 
         {/* Top Categories */}
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
-            <CardTitle>Top Categories</CardTitle>
+            <CardTitle className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              Top Categories
+            </CardTitle>
             <CardDescription>Where your money goes</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {stats.topCategories.map((cat, index) => (
-                <div key={index} className="space-y-2">
+                <div key={index} className="space-y-2 group">
                   <div className="flex justify-between text-sm">
-                    <span className="font-medium">{cat.name}</span>
-                    <span className="font-semibold">{formatCurrency(cat.amount)}</span>
+                    <span className="font-medium group-hover:text-primary transition-colors">{cat.name}</span>
+                    <span className="font-bold text-primary">{formatCurrency(cat.amount)}</span>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div className="h-2.5 bg-secondary rounded-full overflow-hidden shadow-inner">
                     <div
-                      className="h-full bg-primary rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500 shadow-sm"
                       style={{ width: `${(cat.amount / (stats.expense || 1)) * 100}%` }}
                     />
                   </div>
@@ -325,9 +365,11 @@ function ExpensesDashboard() {
 
       {/* Pie Chart */}
       {stats.pieChartData.length > 0 && (
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
-            <CardTitle>Expense Distribution</CardTitle>
+            <CardTitle className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              Expense Distribution
+            </CardTitle>
             <CardDescription>Visual breakdown of spending by category</CardDescription>
           </CardHeader>
           <CardContent>
@@ -342,9 +384,14 @@ function ExpensesDashboard() {
                   outerRadius={120}
                   fill="#8884d8"
                   dataKey="value"
+                  animationDuration={800}
                 >
-                  {stats.pieChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {stats.pieChartData.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                      className="hover:opacity-80 transition-opacity cursor-pointer"
+                    />
                   ))}
                 </Pie>
                 <Tooltip
@@ -352,10 +399,15 @@ function ExpensesDashboard() {
                   contentStyle={{
                     backgroundColor: 'hsl(var(--popover))',
                     border: '1px solid hsl(var(--border))',
-                    borderRadius: '6px',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                   }}
                 />
-                <Legend />
+                <Legend
+                  wrapperStyle={{
+                    paddingTop: '20px',
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -364,22 +416,24 @@ function ExpensesDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Spend by Person */}
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
-            <CardTitle>Spend by Person</CardTitle>
+            <CardTitle className="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+              Spend by Person
+            </CardTitle>
             <CardDescription>Individual spending breakdown</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {stats.topPeople.map((person, index) => (
-                <div key={index} className="space-y-2">
+                <div key={index} className="space-y-2 group">
                   <div className="flex justify-between text-sm">
-                    <span className="font-medium">{person.name}</span>
-                    <span className="font-semibold">{formatCurrency(person.amount)}</span>
+                    <span className="font-medium group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">{person.name}</span>
+                    <span className="font-bold text-green-600 dark:text-green-400">{formatCurrency(person.amount)}</span>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div className="h-2.5 bg-secondary rounded-full overflow-hidden shadow-inner">
                     <div
-                      className="h-full bg-green-500 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-500 shadow-sm"
                       style={{ width: `${(person.amount / (stats.expense || 1)) * 100}%` }}
                     />
                   </div>
@@ -393,22 +447,24 @@ function ExpensesDashboard() {
         </Card>
 
         {/* Spend by Account */}
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
-            <CardTitle>Spend by Account</CardTitle>
+            <CardTitle className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+              Spend by Account
+            </CardTitle>
             <CardDescription>Account-wise distribution</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {stats.topAccounts.map((account, index) => (
-                <div key={index} className="space-y-2">
+                <div key={index} className="space-y-2 group">
                   <div className="flex justify-between text-sm">
-                    <span className="font-medium">{account.name}</span>
-                    <span className="font-semibold">{formatCurrency(account.amount)}</span>
+                    <span className="font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">{account.name}</span>
+                    <span className="font-bold text-purple-600 dark:text-purple-400">{formatCurrency(account.amount)}</span>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div className="h-2.5 bg-secondary rounded-full overflow-hidden shadow-inner">
                     <div
-                      className="h-full bg-purple-500 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500 shadow-sm"
                       style={{ width: `${(account.amount / (stats.expense || 1)) * 100}%` }}
                     />
                   </div>
@@ -423,35 +479,37 @@ function ExpensesDashboard() {
       </div>
 
       {/* Recent Transactions */}
-      <Card>
+      <Card className="hover:shadow-lg transition-shadow duration-300">
         <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Recent Transactions
+          </CardTitle>
           <CardDescription>Your latest financial activity</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y">
             {transactionsData?.data?.slice(0, 5).map((transaction: any) => (
-              <div key={transaction.id} className="p-4 flex items-center justify-between hover:bg-accent/50 transition-colors">
+              <div key={transaction.id} className="p-4 flex items-center justify-between hover:bg-accent/50 transition-all duration-200 group cursor-pointer">
                 <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'INCOME'
-                    ? 'bg-green-100 text-green-600 dark:bg-green-950 dark:text-green-400'
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-md ${transaction.type === 'INCOME'
+                    ? 'bg-gradient-to-br from-green-100 to-emerald-100 text-green-600 dark:from-green-950/50 dark:to-emerald-950/50 dark:text-green-400'
                     : transaction.type === 'CC_PAYMENT'
-                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400'
-                      : 'bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400'
+                      ? 'bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-600 dark:from-blue-950/50 dark:to-cyan-950/50 dark:text-blue-400'
+                      : 'bg-gradient-to-br from-red-100 to-rose-100 text-red-600 dark:from-red-950/50 dark:to-rose-950/50 dark:text-red-400'
                     }`}>
-                    {transaction.type === 'INCOME' ? <ArrowUp size={18} /> :
-                      transaction.type === 'CC_PAYMENT' ? <Wallet size={18} /> :
-                        <ArrowDown size={18} />}
+                    {transaction.type === 'INCOME' ? <ArrowUp size={20} strokeWidth={2.5} /> :
+                      transaction.type === 'CC_PAYMENT' ? <Wallet size={20} strokeWidth={2.5} /> :
+                        <ArrowDown size={20} strokeWidth={2.5} />}
                   </div>
                   <div>
-                    <p className="font-medium">{transaction.description || "Untitled"}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-semibold group-hover:text-primary transition-colors">{transaction.description || "Untitled"}</p>
+                    <p className="text-sm text-muted-foreground font-medium">
                       {new Date(transaction.date).toLocaleDateString()}
                       {transaction.category?.name && ` • ${transaction.category.name}`}
                     </p>
                   </div>
                 </div>
-                <span className={`font-semibold ${transaction.type === 'INCOME'
+                <span className={`font-bold text-lg ${transaction.type === 'INCOME'
                   ? 'text-green-600 dark:text-green-400'
                   : transaction.type === 'CC_PAYMENT'
                     ? 'text-blue-600 dark:text-blue-400'

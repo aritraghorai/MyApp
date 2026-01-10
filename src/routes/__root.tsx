@@ -1,15 +1,46 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRouteWithContext, redirect } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import Header from '../components/Header'
+import { authClient } from '../lib/authClient'
 
 import appCss from '../styles.css?url'
 
 const queryClient = new QueryClient()
 
-export const Route = createRootRoute({
+export interface RouterContext {
+  isAuthenticated: boolean
+  user?: {
+    id: string
+    email: string
+    name: string
+    image?: string | null
+    createdAt: Date
+    updatedAt: Date
+    emailVerified: boolean
+  } | null
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+  beforeLoad: async ({ location }) => {
+    // Skip auth check for API routes
+    if (location.pathname.startsWith('/api/')) {
+      return {
+        isAuthenticated: false,
+        user: null
+      }
+    }
+
+    const session = await authClient.getSession()
+
+    return {
+      isAuthenticated: session.data?.user !== undefined,
+      user: session.data?.user
+    }
+  },
+
   head: () => ({
     meta: [
       {

@@ -1,11 +1,11 @@
-import { createFileRoute, Outlet, Link, useLocation } from '@tanstack/react-router'
+import { createFileRoute, Outlet, Link, useLocation, redirect } from '@tanstack/react-router'
 import { useState } from 'react'
 import { LayoutDashboard, Receipt, CreditCard, Settings, Plus, X } from 'lucide-react'
 import { TransactionForm } from '@/components/expenses/TransactionForm'
-import { getTreaty } from '../api.$'
+import { getTreaty } from '../../api.$'
 import { useQueryClient } from '@tanstack/react-query'
 
-export const Route = createFileRoute('/expenses')({
+export const Route = createFileRoute('/_authed/expenses')({
   component: RouteComponent,
 })
 

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Pencil, Trash2, X, Check, AlertTriangle } from "lucide-react";
-import { useMetadata } from "../../hooks/useMetadata";
+import { useMetadata } from "../../../hooks/useMetadata";
 
-export const Route = createFileRoute("/expenses/settings")({
+export const Route = createFileRoute("/_authed/expenses/settings")({
   component: Settings,
 });
 

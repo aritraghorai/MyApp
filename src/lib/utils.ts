@@ -21,7 +21,7 @@ export const getBilldingPeriodByDate = (date: Date, cycleDate: number): string =
   if (cycleDate == -1) {
     return startDate.getMonth() + "_" + startDate.getFullYear()
   }
-  if (cycleDate > startDate.getDate()) {
+  if (cycleDate <= startDate.getDate()) {
     startDate.setMonth(startDate.getMonth() + 1);
     return startDate.getMonth() + "_" + startDate.getFullYear()
   } else {
