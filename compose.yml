@@ -1,7 +1,11 @@
 services:
   personal-manager:
+    image: aritraghorai/personal-manger:${VERSION:-latest}
     build:
       context: .
+      tags:
+        - aritraghorai/personal-manger:latest
+        - aritraghorai/personal-manger:${VERSION:-latest} 
     # ports:
     #   - "3000:3000"
     env_file:
