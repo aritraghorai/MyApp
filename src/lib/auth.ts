@@ -27,5 +27,9 @@ export const auth = betterAuth({
     enabled: false,
   },
   plugins: [genericOAuthProvider(), openAPI()],
-  trustedOrigins: ["http://localhost:5173", "http://localhost:3000"],
+  trustedOrigins: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://pm.dev.aritraghorai.in",
+  ],
 });
