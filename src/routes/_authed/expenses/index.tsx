@@ -30,6 +30,7 @@ function ExpensesDashboard() {
   const now = new Date();
   const [selectedMonth, setSelectedMonth] = useState(() => now.getMonth().toString());
   const [selectedYear, setSelectedYear] = useState(() => now.getFullYear().toString());
+  const [transactionView, setTransactionView] = useState<"card" | "person">("card");
 
   const selectedCycle = useMemo(() => `${selectedMonth}_${selectedYear}`, [selectedMonth, selectedYear]);
 
@@ -94,6 +95,17 @@ function ExpensesDashboard() {
       byAccount[accountName] = (byAccount[accountName] || 0) + Number(t.amount);
     });
 
+    // Include CC_PAYMENT transactions in person and account breakdowns
+    // Payments should be subtracted since they reduce credit card debt
+    txs.filter((t: any) => t.type === "CC_PAYMENT").forEach((t: any) => {
+      const personName = t.person?.name || "No Person";
+      byPerson[personName] = (byPerson[personName] || 0) - Number(t.amount);
+
+      // For CC_PAYMENT, subtract from the credit card account (destination)
+      const accountName = t.account?.name || "Unknown Account";
+      byAccount[accountName] = (byAccount[accountName] || 0) - Number(t.amount);
+    });
+
     const topCategories = Object.entries(byCategory)
       .map(([name, amount]) => ({ name, amount }))
       .sort((a, b) => b.amount - a.amount)
@@ -125,6 +137,37 @@ function ExpensesDashboard() {
 
     const maxDaily = Math.max(...daily, 1);
 
+    // Group transactions by account and person for list view
+    const transactionsByAccount: Record<string, any[]> = {};
+    const transactionsByPerson: Record<string, any[]> = {};
+
+    txs.forEach((t: any) => {
+      // Group by account
+      if (t.type === "OUTFLOW" || t.type === "INCOME") {
+        const accountName = t.account?.name || "Unknown Account";
+        if (!transactionsByAccount[accountName]) {
+          transactionsByAccount[accountName] = [];
+        }
+        transactionsByAccount[accountName].push(t);
+      } else if (t.type === "CC_PAYMENT") {
+        // For payments, group under the credit card being paid
+        const accountName = t.account?.name || "Unknown Account";
+        if (!transactionsByAccount[accountName]) {
+          transactionsByAccount[accountName] = [];
+        }
+        transactionsByAccount[accountName].push(t);
+      }
+
+      // Group by person
+      if (t.person) {
+        const personName = t.person.name;
+        if (!transactionsByPerson[personName]) {
+          transactionsByPerson[personName] = [];
+        }
+        transactionsByPerson[personName].push(t);
+      }
+    });
+
     return {
       income,
       expense,
@@ -135,6 +178,8 @@ function ExpensesDashboard() {
       pieChartData,
       daily,
       maxDaily,
+      transactionsByAccount,
+      transactionsByPerson,
     };
   }, [transactionsData]);
 
@@ -477,6 +522,161 @@ function ExpensesDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Transaction List View */}
+      <Card className="hover:shadow-lg transition-shadow duration-300">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                Transaction Details
+              </CardTitle>
+              <CardDescription>View transactions grouped by card or person</CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant={transactionView === "card" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setTransactionView("card")}
+                className="transition-all"
+              >
+                By Card
+              </Button>
+              <Button
+                variant={transactionView === "person" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setTransactionView("person")}
+                className="transition-all"
+              >
+                By Person
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {transactionView === "card" ? (
+              // Group by Card/Account
+              Object.entries(stats.transactionsByAccount).map(([accountName, transactions]) => (
+                <div key={accountName} className="space-y-3">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <h3 className="font-semibold text-lg">{accountName}</h3>
+                    <span className="text-sm text-muted-foreground">
+                      {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {transactions.map((transaction: any) => (
+                      <div
+                        key={transaction.id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium truncate">{transaction.description || "Untitled"}</p>
+                            {transaction.type === "CC_PAYMENT" && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                Payment
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                            <span>{new Date(transaction.date).toLocaleDateString()}</span>
+                            {transaction.category?.name && (
+                              <>
+                                <span>•</span>
+                                <span>{transaction.category.name}</span>
+                              </>
+                            )}
+                            {transaction.person?.name && (
+                              <>
+                                <span>•</span>
+                                <span>{transaction.person.name}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <span
+                          className={`font-bold text-lg whitespace-nowrap ml-4 ${transaction.type === "INCOME"
+                              ? "text-green-600 dark:text-green-400"
+                              : transaction.type === "CC_PAYMENT"
+                                ? "text-blue-600 dark:text-blue-400"
+                                : "text-red-600 dark:text-red-400"
+                            }`}
+                        >
+                          {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
+                          {formatCurrency(Number(transaction.amount))}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              // Group by Person
+              Object.entries(stats.transactionsByPerson).map(([personName, transactions]) => (
+                <div key={personName} className="space-y-3">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <h3 className="font-semibold text-lg">{personName}</h3>
+                    <span className="text-sm text-muted-foreground">
+                      {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {transactions.map((transaction: any) => (
+                      <div
+                        key={transaction.id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium truncate">{transaction.description || "Untitled"}</p>
+                            {transaction.type === "CC_PAYMENT" && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                Payment
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                            <span>{new Date(transaction.date).toLocaleDateString()}</span>
+                            {transaction.category?.name && (
+                              <>
+                                <span>•</span>
+                                <span>{transaction.category.name}</span>
+                              </>
+                            )}
+                            {transaction.account?.name && (
+                              <>
+                                <span>•</span>
+                                <span>{transaction.account.name}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <span
+                          className={`font-bold text-lg whitespace-nowrap ml-4 ${transaction.type === "INCOME"
+                              ? "text-green-600 dark:text-green-400"
+                              : transaction.type === "CC_PAYMENT"
+                                ? "text-blue-600 dark:text-blue-400"
+                                : "text-red-600 dark:text-red-400"
+                            }`}
+                        >
+                          {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
+                          {formatCurrency(Number(transaction.amount))}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+            {((transactionView === "card" && Object.keys(stats.transactionsByAccount).length === 0) ||
+              (transactionView === "person" && Object.keys(stats.transactionsByPerson).length === 0)) && (
+                <p className="text-center text-muted-foreground py-8">No transactions found</p>
+              )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Recent Transactions */}
       <Card className="hover:shadow-lg transition-shadow duration-300">
