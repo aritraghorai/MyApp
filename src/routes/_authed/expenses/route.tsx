@@ -93,7 +93,7 @@ function RouteComponent() {
       {/* Mobile FAB */}
       <button
         onClick={() => setIsCreating(true)}
-        className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center z-50 hover:bg-blue-700 transition-colors"
+        className="md:hidden fixed bottom-14 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center z-50 hover:bg-blue-700 transition-colors"
       >
         <Plus size={28} />
       </button>
