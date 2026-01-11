@@ -1,4 +1,4 @@
-.PHONY: build push deploy help
+.PHONY: build push deploy bp help clean
 
 # Default version if not set
 VERSION ?= latest
@@ -16,6 +16,9 @@ build: ## Build Docker image (usage: make build VERSION=v1.0.3)
 push: ## Push Docker image to registry (usage: make push VERSION=v1.0.3)
 	@echo "Pushing personal-manager with version: $(VERSION)"
 	docker compose push personal-manager
+
+bp: build push ## Shorthand for build and push (usage: make bp VERSION=v1.0.3)
+	@echo "✅ Successfully built and pushed personal-manager:$(VERSION)"
 
 deploy: build push ## Build and push Docker image (usage: make deploy VERSION=v1.0.3)
 	@echo "Successfully deployed personal-manager:$(VERSION)"
