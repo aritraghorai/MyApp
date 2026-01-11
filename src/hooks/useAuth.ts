@@ -7,7 +7,6 @@ const useAuth = () => {
     const logWithAuthelia = () => {
         authClient.signIn.oauth2({
             providerId: "authelia",
-            callbackURL: import.meta.env.VITE_API_URL
         });
     }
 

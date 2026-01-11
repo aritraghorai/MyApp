@@ -18,6 +18,20 @@ export const Route = createFileRoute("/api/$")({
   },
 });
 
+// Use VITE_API_URL if available, otherwise fall back to current origin
+const getApiBaseURL = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (apiUrl && apiUrl !== 'undefined') {
+    return apiUrl;
+  }
+  // Fallback to current origin (only works on client-side)
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  // Server-side fallback
+  return '';
+};
+
 export const getTreaty = createIsomorphicFn()
   .server(() => treaty(api).api)
-  .client(() => treaty<typeof api>(import.meta.env.VITE_API_URL).api);
+  .client(() => treaty<typeof api>(getApiBaseURL()).api);

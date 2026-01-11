@@ -4,9 +4,9 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import Header from '../components/Header'
-import { authClient } from '../lib/authClient'
 
 import appCss from '../styles.css?url'
+import { getCurrentUser } from '@/lib/auth-server'
 
 const queryClient = new QueryClient()
 
@@ -33,12 +33,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       }
     }
 
-    const session = await authClient.getSession()
+    const session = await getCurrentUser()
 
-    return {
-      isAuthenticated: session.data?.user !== undefined,
-      user: session.data?.user
-    }
+
+    return session
   },
 
   head: () => ({

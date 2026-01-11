@@ -12,12 +12,15 @@ const getBaseURL = () => {
     return `${window.location.origin}/api/auth`;
   }
   // Server-side fallback - use localhost for SSR
-  return 'http://localhost:3000/api/auth';
+  return `${process.env.BASE_URL}/api/auth`;
 };
+
+
 
 export const authClient = createAuthClient({
   baseURL: getBaseURL(),
   plugins: [genericOAuthClient()],
-});
+})
 
-export const { useSession } = authClient;
+
+export const { useSession } = authClient

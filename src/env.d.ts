@@ -19,6 +19,7 @@ declare global {
       readonly AUTHELIA_ISSUER_URL: string;
       readonly AUTHELIA_CLIENT_ID: string;
       readonly AUTHELIA_CLIENT_SECRET: string;
+      readonly BASE_URL: string;
     }
   }
 }
