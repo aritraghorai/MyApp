@@ -26,11 +26,13 @@ export function TransactionForm({ initialData, onSubmit, isSubmitting, onCancel 
         description: initialData?.description || "",
         date: initialData?.date ? new Date(initialData.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
         categoryId: initialData?.categoryId || "",
-        accountId: initialData?.accountId || "",
-        destinationAccountId: initialData?.destinationAccountId || "",
+        // For CC_PAYMENT: accountId is the credit card, fromAccountId is the bank account
+        // In the form: accountId is the source (bank for payment), destinationAccountId is the target (credit card)
+        accountId: initialData?.type === "CC_PAYMENT" ? (initialData?.fromAccountId || "") : (initialData?.accountId || ""),
+        destinationAccountId: initialData?.type === "CC_PAYMENT" ? (initialData?.accountId || "") : (initialData?.destinationAccountId || ""),
         personId: initialData?.personId || "",
         tagIds: initialData?.tags?.map((t: any) => t.tagId) || [],
-        billingCycle: "",
+        billingCycle: initialData?.billingCycle || "",
     });
 
     const { data: accounts } = useQuery({
@@ -103,24 +105,32 @@ export function TransactionForm({ initialData, onSubmit, isSubmitting, onCancel 
                 return;
             }
 
-            const paymentPayload = {
-                amount: Number(formData.amount),
-                type: "CC_PAYMENT" as const,
-                categoryId: formData.categoryId || undefined,
-                accountId: formData.destinationAccountId, // The Credit Card
-                fromAccountId: formData.accountId, // The Bank Account
-                billingCycle: formData.billingCycle,
-                personId: formData.personId || undefined,
-            };
+            // If we're editing (initialData exists), pass the data to onSubmit
+            // Otherwise, create a new payment via the payment endpoint
+            if (initialData) {
+                // Editing existing payment - pass data to TransactionDialog
+                await onSubmit(payload);
+            } else {
+                // Creating new payment - use payment endpoint
+                const paymentPayload = {
+                    amount: Number(formData.amount),
+                    type: "CC_PAYMENT" as const,
+                    categoryId: formData.categoryId || undefined,
+                    accountId: formData.destinationAccountId, // The Credit Card
+                    fromAccountId: formData.accountId, // The Bank Account
+                    billingCycle: formData.billingCycle,
+                    personId: formData.personId || undefined,
+                };
 
-            // @ts-ignore
-            const { error } = await getTreaty().transactions.payment.post(paymentPayload);
-            if (error) {
-                console.error(error);
-                alert("Failed to create payment");
-                return;
+                // @ts-ignore
+                const { error } = await getTreaty().transactions.payment.post(paymentPayload);
+                if (error) {
+                    console.error(error);
+                    alert("Failed to create payment");
+                    return;
+                }
+                await onSubmit(null); // Pass null to trigger refetch/close
             }
-            await onSubmit(null); // Pass null or appropriate response to trigger refetch/close
         } else {
             delete payload.destinationAccountId;
             delete payload.billingCycle;
