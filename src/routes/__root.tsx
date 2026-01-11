@@ -54,7 +54,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
       {
         name: 'description',
-        content: 'Personal expense tracking and management application',
+        content: 'Personal management application for organizing your life',
       },
       {
         name: 'theme-color',

@@ -1,7 +1,7 @@
 {
   "short_name": "Personal Manager",
-  "name": "Personal Manager - Expense Tracking",
-  "description": "Personal expense tracking and management application",
+  "name": "Personal Manager",
+  "description": "Personal management application for organizing your life",
   "icons": [
     {
       "src": "favicon.ico",
@@ -27,5 +27,5 @@
   "orientation": "portrait",
   "theme_color": "#000000",
   "background_color": "#ffffff",
-  "categories": ["finance", "productivity", "utilities"]
+  "categories": ["productivity", "utilities", "lifestyle"]
 }

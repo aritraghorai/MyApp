@@ -26,7 +26,7 @@ const config = defineConfig({
       manifest: {
         name: 'Personal Manager',
         short_name: 'Personal Manager',
-        description: 'Personal expense tracking and management application',
+        description: 'Personal management application for organizing your life',
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
