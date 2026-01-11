@@ -51,10 +51,10 @@ export function DeleteTransactionDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-w-md">
-				<DialogHeader>
-					<DialogTitle>Delete Transaction</DialogTitle>
-					<DialogDescription>
+			<DialogContent className="max-w-md sm:max-w-lg w-[calc(100vw-2rem)] sm:w-full">
+				<DialogHeader className="space-y-2">
+					<DialogTitle className="text-lg sm:text-xl">Delete Transaction</DialogTitle>
+					<DialogDescription className="text-xs sm:text-sm">
 						Are you sure you want to delete this transaction? This action cannot
 						be undone.
 					</DialogDescription>
@@ -64,44 +64,49 @@ export function DeleteTransactionDialog({
 					variant="destructive"
 					className="border-red-500/50 bg-red-50 dark:bg-red-950/20"
 				>
-					<AlertCircle className="h-4 w-4" />
-					<AlertDescription>
+					<AlertCircle className="h-4 w-4 shrink-0" />
+					<AlertDescription className="text-xs sm:text-sm">
 						This will permanently delete the transaction.
 					</AlertDescription>
 				</Alert>
 
-				<div className="space-y-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-					<div className="flex justify-between text-sm gap-2">
-						<span className="text-muted-foreground flex-shrink-0">
+				<div className="space-y-2 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+					<div className="flex justify-between text-xs sm:text-sm gap-2">
+						<span className="text-muted-foreground shrink-0">
 							Description:
 						</span>
 						<TruncatedText className="font-medium text-right">
 							{transaction.description || "Untitled"}
 						</TruncatedText>
 					</div>
-					<div className="flex justify-between text-sm">
-						<span className="text-muted-foreground">Amount:</span>
+					<div className="flex justify-between text-xs sm:text-sm">
+						<span className="text-muted-foreground shrink-0">Amount:</span>
 						<span className="font-bold">
 							{formatCurrency(Number(transaction.amount))}
 						</span>
 					</div>
-					<div className="flex justify-between text-sm">
-						<span className="text-muted-foreground">Date:</span>
-						<span>{new Date(transaction.date).toLocaleDateString()}</span>
+					<div className="flex justify-between text-xs sm:text-sm">
+						<span className="text-muted-foreground shrink-0">Date:</span>
+						<span>{new Date(transaction.date).toLocaleDateString(undefined, {
+							month: 'short',
+							day: 'numeric',
+							year: 'numeric'
+						})}</span>
 					</div>
 					{transaction.category?.name && (
-						<div className="flex justify-between text-sm">
-							<span className="text-muted-foreground">Category:</span>
-							<span>{transaction.category.name}</span>
+						<div className="flex justify-between text-xs sm:text-sm">
+							<span className="text-muted-foreground shrink-0">Category:</span>
+							<span className="truncate ml-2">{transaction.category.name}</span>
 						</div>
 					)}
 				</div>
 
-				<DialogFooter>
+				<DialogFooter className="gap-2 sm:gap-0">
 					<Button
 						variant="outline"
 						onClick={() => onOpenChange(false)}
 						disabled={deleteMutation.isPending}
+						className="flex-1 sm:flex-none"
 					>
 						Cancel
 					</Button>
@@ -109,8 +114,9 @@ export function DeleteTransactionDialog({
 						variant="destructive"
 						onClick={handleDelete}
 						disabled={deleteMutation.isPending}
+						className="flex-1 sm:flex-none"
 					>
-						{deleteMutation.isPending ? "Deleting..." : "Delete Transaction"}
+						{deleteMutation.isPending ? "Deleting..." : "Delete"}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
