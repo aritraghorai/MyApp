@@ -39,8 +39,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { formatCurrency } from "@/lib/utils";
 import { TruncatedText } from "@/components/ui/truncated-text";
+import { formatCurrency } from "@/lib/utils";
 import { getTreaty } from "@/routes/api.$";
 
 const transactionSearchSchema = z.object({
@@ -324,12 +324,13 @@ function TransactionsList() {
 
 				return (
 					<div
-						className={`text-right font-semibold whitespace-nowrap ${isIncome
+						className={`text-right font-semibold whitespace-nowrap ${
+							isIncome
 								? "text-green-600 dark:text-green-400"
 								: isTransfer
 									? "text-blue-600 dark:text-blue-400"
 									: "text-red-600 dark:text-red-400"
-							}`}
+						}`}
 					>
 						{isIncome ? "+" : isOutflow ? "-" : ""}
 						{formatCurrency(amount)}
@@ -603,9 +604,9 @@ function TransactionsList() {
 												{header.isPlaceholder
 													? null
 													: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
+															header.column.columnDef.header,
+															header.getContext(),
+														)}
 											</TableHead>
 										);
 									})}
@@ -709,12 +710,13 @@ function TransactionsList() {
 												</div>
 											</div>
 											<div
-												className={`font-bold text-lg whitespace-nowrap ${isIncome
+												className={`font-bold text-lg whitespace-nowrap ${
+													isIncome
 														? "text-green-600 dark:text-green-400"
 														: isTransfer
 															? "text-blue-600 dark:text-blue-400"
 															: "text-red-600 dark:text-red-400"
-													}`}
+												}`}
 											>
 												{isIncome ? "+" : isOutflow ? "-" : ""}
 												{formatCurrency(Number(transaction.amount))}

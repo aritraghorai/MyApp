@@ -1,20 +1,19 @@
-import { createRouter } from '@tanstack/react-router'
-
+import { createRouter } from "@tanstack/react-router";
+import type { RouterContext } from "./routes/__root";
 // Import the generated route tree
-import { routeTree } from './routeTree.gen'
-import type { RouterContext } from './routes/__root'
+import { routeTree } from "./routeTree.gen";
 
 // Create a new router instance
 export const getRouter = () => {
-  const router = createRouter({
-    routeTree,
-    scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
-    context: {
-      isAuthenticated: false,
-      user: null,
-    } satisfies RouterContext,
-  })
+	const router = createRouter({
+		routeTree,
+		scrollRestoration: true,
+		defaultPreloadStaleTime: 0,
+		context: {
+			isAuthenticated: false,
+			user: null,
+		} satisfies RouterContext,
+	});
 
-  return router
-}
+	return router;
+};

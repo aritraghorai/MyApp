@@ -10,8 +10,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { formatCurrency } from "@/lib/utils";
 import { TruncatedText } from "@/components/ui/truncated-text";
+import { formatCurrency } from "@/lib/utils";
 import { getTreaty } from "@/routes/api.$";
 
 interface DeleteTransactionDialogProps {
@@ -72,7 +72,9 @@ export function DeleteTransactionDialog({
 
 				<div className="space-y-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
 					<div className="flex justify-between text-sm gap-2">
-						<span className="text-muted-foreground flex-shrink-0">Description:</span>
+						<span className="text-muted-foreground flex-shrink-0">
+							Description:
+						</span>
 						<TruncatedText className="font-medium text-right">
 							{transaction.description || "Untitled"}
 						</TruncatedText>
