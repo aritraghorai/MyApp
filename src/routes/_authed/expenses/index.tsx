@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 export const Route = createFileRoute("/_authed/expenses/")({
@@ -525,20 +526,20 @@ function ExpensesDashboard() {
 
       {/* Transaction List View */}
       <Card className="hover:shadow-lg transition-shadow duration-300">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              <CardTitle className="text-lg bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 Transaction Details
               </CardTitle>
-              <CardDescription>View transactions grouped by card or person</CardDescription>
+              <CardDescription className="text-xs">View transactions grouped by card or person</CardDescription>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               <Button
                 variant={transactionView === "card" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTransactionView("card")}
-                className="transition-all"
+                className="transition-all h-8 text-xs px-3"
               >
                 By Card
               </Button>
@@ -546,135 +547,149 @@ function ExpensesDashboard() {
                 variant={transactionView === "person" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTransactionView("person")}
-                className="transition-all"
+                className="transition-all h-8 text-xs px-3"
               >
                 By Person
               </Button>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {transactionView === "card" ? (
-              // Group by Card/Account
-              Object.entries(stats.transactionsByAccount).map(([accountName, transactions]) => (
-                <div key={accountName} className="space-y-3">
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <h3 className="font-semibold text-lg">{accountName}</h3>
-                    <span className="text-sm text-muted-foreground">
-                      {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    {transactions.map((transaction: any) => (
-                      <div
-                        key={transaction.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium truncate">{transaction.description || "Untitled"}</p>
-                            {transaction.type === "CC_PAYMENT" && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-                                Payment
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <span>{new Date(transaction.date).toLocaleDateString()}</span>
-                            {transaction.category?.name && (
-                              <>
-                                <span>•</span>
-                                <span>{transaction.category.name}</span>
-                              </>
-                            )}
-                            {transaction.person?.name && (
-                              <>
-                                <span>•</span>
-                                <span>{transaction.person.name}</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <span
-                          className={`font-bold text-lg whitespace-nowrap ml-4 ${transaction.type === "INCOME"
-                              ? "text-green-600 dark:text-green-400"
-                              : transaction.type === "CC_PAYMENT"
-                                ? "text-blue-600 dark:text-blue-400"
-                                : "text-red-600 dark:text-red-400"
-                            }`}
-                        >
-                          {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
-                          {formatCurrency(Number(transaction.amount))}
+        <CardContent className="pt-0">
+          {transactionView === "card" ? (
+            // Group by Card/Account
+            Object.keys(stats.transactionsByAccount).length > 0 ? (
+              <Accordion type="multiple" className="w-full">
+                {Object.entries(stats.transactionsByAccount).map(([accountName, transactions]) => (
+                  <AccordionItem key={accountName} value={accountName}>
+                    <AccordionTrigger className="hover:no-underline py-3">
+                      <div className="flex items-center justify-between w-full pr-4">
+                        <h3 className="font-semibold text-sm text-left">{accountName}</h3>
+                        <span className="text-xs text-muted-foreground">
+                          {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
                         </span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-1 pt-1">
+                        {transactions.map((transaction: any) => (
+                          <div
+                            key={transaction.id}
+                            className="flex items-center justify-between p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-medium text-sm truncate">{transaction.description || "Untitled"}</p>
+                                {transaction.type === "CC_PAYMENT" && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                    Payment
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                                <span>{new Date(transaction.date).toLocaleDateString()}</span>
+                                {transaction.category?.name && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="truncate">{transaction.category.name}</span>
+                                  </>
+                                )}
+                                {transaction.person?.name && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="truncate">{transaction.person.name}</span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                            <span
+                              className={`font-bold text-sm whitespace-nowrap ml-3 ${transaction.type === "INCOME"
+                                  ? "text-green-600 dark:text-green-400"
+                                  : transaction.type === "CC_PAYMENT"
+                                    ? "text-blue-600 dark:text-blue-400"
+                                    : "text-red-600 dark:text-red-400"
+                                }`}
+                            >
+                              {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
+                              {formatCurrency(Number(transaction.amount))}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             ) : (
-              // Group by Person
-              Object.entries(stats.transactionsByPerson).map(([personName, transactions]) => (
-                <div key={personName} className="space-y-3">
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <h3 className="font-semibold text-lg">{personName}</h3>
-                    <span className="text-sm text-muted-foreground">
-                      {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    {transactions.map((transaction: any) => (
-                      <div
-                        key={transaction.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium truncate">{transaction.description || "Untitled"}</p>
-                            {transaction.type === "CC_PAYMENT" && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-                                Payment
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <span>{new Date(transaction.date).toLocaleDateString()}</span>
-                            {transaction.category?.name && (
-                              <>
-                                <span>•</span>
-                                <span>{transaction.category.name}</span>
-                              </>
-                            )}
-                            {transaction.account?.name && (
-                              <>
-                                <span>•</span>
-                                <span>{transaction.account.name}</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <span
-                          className={`font-bold text-lg whitespace-nowrap ml-4 ${transaction.type === "INCOME"
-                              ? "text-green-600 dark:text-green-400"
-                              : transaction.type === "CC_PAYMENT"
-                                ? "text-blue-600 dark:text-blue-400"
-                                : "text-red-600 dark:text-red-400"
-                            }`}
-                        >
-                          {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
-                          {formatCurrency(Number(transaction.amount))}
+              <p className="text-center text-muted-foreground py-6 text-sm">No transactions found</p>
+            )
+          ) : (
+            // Group by Person
+            Object.keys(stats.transactionsByPerson).length > 0 ? (
+              <Accordion type="multiple" className="w-full">
+                {Object.entries(stats.transactionsByPerson).map(([personName, transactions]) => (
+                  <AccordionItem key={personName} value={personName}>
+                    <AccordionTrigger className="hover:no-underline py-3">
+                      <div className="flex items-center justify-between w-full pr-4">
+                        <h3 className="font-semibold text-sm text-left">{personName}</h3>
+                        <span className="text-xs text-muted-foreground">
+                          {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
                         </span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
-            {((transactionView === "card" && Object.keys(stats.transactionsByAccount).length === 0) ||
-              (transactionView === "person" && Object.keys(stats.transactionsByPerson).length === 0)) && (
-                <p className="text-center text-muted-foreground py-8">No transactions found</p>
-              )}
-          </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-1 pt-1">
+                        {transactions.map((transaction: any) => (
+                          <div
+                            key={transaction.id}
+                            className="flex items-center justify-between p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-medium text-sm truncate">{transaction.description || "Untitled"}</p>
+                                {transaction.type === "CC_PAYMENT" && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                    Payment
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                                <span>{new Date(transaction.date).toLocaleDateString()}</span>
+                                {transaction.category?.name && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="truncate">{transaction.category.name}</span>
+                                  </>
+                                )}
+                                {transaction.account?.name && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="truncate">{transaction.account.name}</span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                            <span
+                              className={`font-bold text-sm whitespace-nowrap ml-3 ${transaction.type === "INCOME"
+                                  ? "text-green-600 dark:text-green-400"
+                                  : transaction.type === "CC_PAYMENT"
+                                    ? "text-blue-600 dark:text-blue-400"
+                                    : "text-red-600 dark:text-red-400"
+                                }`}
+                            >
+                              {transaction.type === "INCOME" ? "+" : transaction.type === "OUTFLOW" ? "-" : ""}
+                              {formatCurrency(Number(transaction.amount))}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            ) : (
+              <p className="text-center text-muted-foreground py-6 text-sm">No transactions found</p>
+            )
+          )}
         </CardContent>
       </Card>
 
