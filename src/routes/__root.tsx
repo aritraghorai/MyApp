@@ -7,6 +7,7 @@ import Header from '../components/Header'
 
 import appCss from '../styles.css?url'
 import { getCurrentUser } from '@/lib/auth-server'
+import '../registerSW'
 
 const queryClient = new QueryClient()
 
@@ -49,13 +50,29 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Personal Manager',
+      },
+      {
+        name: 'description',
+        content: 'Personal expense tracking and management application',
+      },
+      {
+        name: 'theme-color',
+        content: '#000000',
       },
     ],
     links: [
       {
         rel: 'stylesheet',
         href: appCss,
+      },
+      {
+        rel: 'manifest',
+        href: '/manifest.json',
+      },
+      {
+        rel: 'apple-touch-icon',
+        href: '/logo192.png',
       },
     ],
   }),
