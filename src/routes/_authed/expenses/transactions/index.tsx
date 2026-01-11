@@ -40,6 +40,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/utils";
+import { TruncatedText } from "@/components/ui/truncated-text";
 import { getTreaty } from "@/routes/api.$";
 
 const transactionSearchSchema = z.object({
@@ -323,13 +324,12 @@ function TransactionsList() {
 
 				return (
 					<div
-						className={`text-right font-semibold whitespace-nowrap ${
-							isIncome
+						className={`text-right font-semibold whitespace-nowrap ${isIncome
 								? "text-green-600 dark:text-green-400"
 								: isTransfer
 									? "text-blue-600 dark:text-blue-400"
 									: "text-red-600 dark:text-red-400"
-						}`}
+							}`}
 					>
 						{isIncome ? "+" : isOutflow ? "-" : ""}
 						{formatCurrency(amount)}
@@ -603,9 +603,9 @@ function TransactionsList() {
 												{header.isPlaceholder
 													? null
 													: flexRender(
-															header.column.columnDef.header,
-															header.getContext(),
-														)}
+														header.column.columnDef.header,
+														header.getContext(),
+													)}
 											</TableHead>
 										);
 									})}
@@ -701,21 +701,20 @@ function TransactionsList() {
 									<CardContent className="p-4 space-y-3">
 										<div className="flex items-start justify-between gap-2">
 											<div className="flex-1 min-w-0">
-												<div className="font-semibold text-base truncate">
+												<TruncatedText className="font-semibold text-base">
 													{transaction.description}
-												</div>
+												</TruncatedText>
 												<div className="text-sm text-muted-foreground mt-0.5">
 													{new Date(transaction.date).toLocaleDateString()}
 												</div>
 											</div>
 											<div
-												className={`font-bold text-lg whitespace-nowrap ${
-													isIncome
+												className={`font-bold text-lg whitespace-nowrap ${isIncome
 														? "text-green-600 dark:text-green-400"
 														: isTransfer
 															? "text-blue-600 dark:text-blue-400"
 															: "text-red-600 dark:text-red-400"
-												}`}
+													}`}
 											>
 												{isIncome ? "+" : isOutflow ? "-" : ""}
 												{formatCurrency(Number(transaction.amount))}

@@ -24,6 +24,7 @@ import {
 } from "recharts";
 import { DeleteTransactionDialog } from "@/components/expenses/DeleteTransactionDialog";
 import { TransactionDialog } from "@/components/expenses/TransactionDialog";
+import { TruncatedText } from "@/components/ui/truncated-text";
 import {
   Accordion,
   AccordionContent,
@@ -732,12 +733,12 @@ function ExpensesDashboard() {
                               className="flex items-center justify-between p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors group"
                             >
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-1.5">
-                                  <p className="font-medium text-sm truncate">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <TruncatedText>
                                     {transaction.description || "Untitled"}
-                                  </p>
+                                  </TruncatedText>
                                   {transaction.type === "CC_PAYMENT" && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 flex-shrink-0">
                                       Payment
                                     </span>
                                   )}
@@ -843,12 +844,12 @@ function ExpensesDashboard() {
                               className="flex items-center justify-between p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors group"
                             >
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-1.5">
-                                  <p className="font-medium text-sm truncate">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <TruncatedText>
                                     {transaction.description || "Untitled"}
-                                  </p>
+                                  </TruncatedText>
                                   {transaction.type === "CC_PAYMENT" && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 flex-shrink-0">
                                       Payment
                                     </span>
                                   )}
@@ -965,9 +966,9 @@ function ExpensesDashboard() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold group-hover:text-primary transition-colors truncate">
+                    <TruncatedText className="font-semibold group-hover:text-primary transition-colors">
                       {transaction.description || "Untitled"}
-                    </p>
+                    </TruncatedText>
                     <p className="text-sm text-muted-foreground font-medium truncate">
                       {new Date(transaction.date).toLocaleDateString()}
                       {transaction.category?.name &&
