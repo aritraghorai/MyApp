@@ -20,6 +20,25 @@ const genericOAuthProvider = () =>
       },
     ],
   });
+// Custom logger for Better Auth with enhanced debugging
+const authLogger = {
+  log: (...args: any[]) => {
+    console.log('[Better Auth]', new Date().toISOString(), ...args);
+  },
+  error: (...args: any[]) => {
+    console.error('[Better Auth ERROR]', new Date().toISOString(), ...args);
+  },
+  warn: (...args: any[]) => {
+    console.warn('[Better Auth WARN]', new Date().toISOString(), ...args);
+  },
+  debug: (...args: any[]) => {
+    console.debug('[Better Auth DEBUG]', new Date().toISOString(), ...args);
+  },
+  info: (...args: any[]) => {
+    console.info('[Better Auth INFO]', new Date().toISOString(), ...args);
+  },
+};
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "sqlite",
@@ -27,6 +46,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: false,
   },
+  logger: authLogger,
   plugins: [genericOAuthProvider(), openAPI()],
   trustedOrigins: [
     "http://localhost:5173",

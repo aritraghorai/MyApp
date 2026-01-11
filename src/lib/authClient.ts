@@ -22,5 +22,7 @@ export const authClient = createAuthClient({
   plugins: [genericOAuthClient()],
 })
 
+// Log the base URL for debugging
+console.log('[Better Auth Client] Initialized with baseURL:', getBaseURL());
 
 export const { useSession } = authClient
