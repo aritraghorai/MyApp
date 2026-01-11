@@ -677,12 +677,12 @@ function ExpensesDashboard() {
       {/* Transaction List View */}
       <Card className="hover:shadow-lg transition-shadow duration-300">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <CardTitle className="text-lg bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              <CardTitle className="text-base sm:text-lg bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 Transaction Details
               </CardTitle>
-              <CardDescription className="text-xs">
+              <CardDescription className="text-xs sm:text-sm">
                 View transactions grouped by card or person
               </CardDescription>
             </div>
@@ -691,7 +691,7 @@ function ExpensesDashboard() {
                 variant={transactionView === "card" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTransactionView("card")}
-                className="transition-all h-8 text-xs px-3"
+                className="transition-all h-7 sm:h-8 text-xs px-2 sm:px-3"
               >
                 By Card
               </Button>
@@ -699,7 +699,7 @@ function ExpensesDashboard() {
                 variant={transactionView === "person" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTransactionView("person")}
-                className="transition-all h-8 text-xs px-3"
+                className="transition-all h-7 sm:h-8 text-xs px-2 sm:px-3"
               >
                 By Person
               </Button>
@@ -714,12 +714,12 @@ function ExpensesDashboard() {
                 {Object.entries(stats.transactionsByAccount).map(
                   ([accountName, transactions]) => (
                     <AccordionItem key={accountName} value={accountName}>
-                      <AccordionTrigger className="hover:no-underline py-3">
-                        <div className="flex items-center justify-between w-full pr-4">
-                          <h3 className="font-semibold text-sm text-left">
+                      <AccordionTrigger className="hover:no-underline py-2.5 sm:py-3">
+                        <div className="flex items-center justify-between w-full pr-3 sm:pr-4">
+                          <h3 className="font-semibold text-xs sm:text-sm text-left truncate mr-2">
                             {accountName}
                           </h3>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground shrink-0">
                             {transactions.length} transaction
                             {transactions.length !== 1 ? "s" : ""}
                           </span>
@@ -730,24 +730,28 @@ function ExpensesDashboard() {
                           {transactions.map((transaction: any) => (
                             <div
                               key={transaction.id}
-                              className="flex items-center justify-between p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+                              className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors group"
                             >
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1.5 min-w-0">
-                                  <TruncatedText>
+                                  <TruncatedText className="text-xs sm:text-sm">
                                     {transaction.description || "Untitled"}
                                   </TruncatedText>
                                   {transaction.type === "CC_PAYMENT" && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 flex-shrink-0">
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 shrink-0">
                                       Payment
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                                <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground mt-0.5">
                                   <span>
                                     {new Date(
                                       transaction.date,
-                                    ).toLocaleDateString()}
+                                    ).toLocaleDateString(undefined, {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: window.innerWidth < 640 ? undefined : 'numeric'
+                                    })}
                                   </span>
                                   {transaction.category?.name && (
                                     <>
@@ -767,9 +771,9 @@ function ExpensesDashboard() {
                                   )}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center justify-between sm:justify-end gap-2">
                                 <span
-                                  className={`font-bold text-sm whitespace-nowrap ${transaction.type === "INCOME"
+                                  className={`font-bold text-xs sm:text-sm whitespace-nowrap ${transaction.type === "INCOME"
                                     ? "text-green-600 dark:text-green-400"
                                     : transaction.type === "CC_PAYMENT"
                                       ? "text-blue-600 dark:text-blue-400"
@@ -787,22 +791,22 @@ function ExpensesDashboard() {
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 w-8 md:h-7 md:w-7 p-0"
+                                    className="h-7 w-7 md:h-6 md:w-6 p-0"
                                     onClick={() =>
                                       setEditingTransaction(transaction)
                                     }
                                   >
-                                    <Pencil className="h-4 w-4 md:h-3.5 md:w-3.5" />
+                                    <Pencil className="h-3.5 w-3.5 md:h-3 md:w-3" />
                                   </Button>
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 w-8 md:h-7 md:w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                                    className="h-7 w-7 md:h-6 md:w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
                                     onClick={() =>
                                       setDeletingTransaction(transaction)
                                     }
                                   >
-                                    <Trash2 className="h-4 w-4 md:h-3.5 md:w-3.5" />
+                                    <Trash2 className="h-3.5 w-3.5 md:h-3 md:w-3" />
                                   </Button>
                                 </div>
                               </div>
@@ -825,12 +829,12 @@ function ExpensesDashboard() {
                 {Object.entries(stats.transactionsByPerson).map(
                   ([personName, transactions]) => (
                     <AccordionItem key={personName} value={personName}>
-                      <AccordionTrigger className="hover:no-underline py-3">
-                        <div className="flex items-center justify-between w-full pr-4">
-                          <h3 className="font-semibold text-sm text-left">
+                      <AccordionTrigger className="hover:no-underline py-2.5 sm:py-3">
+                        <div className="flex items-center justify-between w-full pr-3 sm:pr-4">
+                          <h3 className="font-semibold text-xs sm:text-sm text-left truncate mr-2">
                             {personName}
                           </h3>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground shrink-0">
                             {transactions.length} transaction
                             {transactions.length !== 1 ? "s" : ""}
                           </span>
@@ -841,24 +845,28 @@ function ExpensesDashboard() {
                           {transactions.map((transaction: any) => (
                             <div
                               key={transaction.id}
-                              className="flex items-center justify-between p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+                              className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 rounded-md bg-secondary/30 hover:bg-secondary/50 transition-colors group"
                             >
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1.5 min-w-0">
-                                  <TruncatedText>
+                                  <TruncatedText className="text-xs sm:text-sm">
                                     {transaction.description || "Untitled"}
                                   </TruncatedText>
                                   {transaction.type === "CC_PAYMENT" && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 flex-shrink-0">
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 shrink-0">
                                       Payment
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                                <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground mt-0.5">
                                   <span>
                                     {new Date(
                                       transaction.date,
-                                    ).toLocaleDateString()}
+                                    ).toLocaleDateString(undefined, {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: window.innerWidth < 640 ? undefined : 'numeric'
+                                    })}
                                   </span>
                                   {transaction.category?.name && (
                                     <>
@@ -878,9 +886,9 @@ function ExpensesDashboard() {
                                   )}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center justify-between sm:justify-end gap-2">
                                 <span
-                                  className={`font-bold text-sm whitespace-nowrap ${transaction.type === "INCOME"
+                                  className={`font-bold text-xs sm:text-sm whitespace-nowrap ${transaction.type === "INCOME"
                                     ? "text-green-600 dark:text-green-400"
                                     : transaction.type === "CC_PAYMENT"
                                       ? "text-blue-600 dark:text-blue-400"
@@ -898,22 +906,22 @@ function ExpensesDashboard() {
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 w-8 md:h-7 md:w-7 p-0"
+                                    className="h-7 w-7 md:h-6 md:w-6 p-0"
                                     onClick={() =>
                                       setEditingTransaction(transaction)
                                     }
                                   >
-                                    <Pencil className="h-4 w-4 md:h-3.5 md:w-3.5" />
+                                    <Pencil className="h-3.5 w-3.5 md:h-3 md:w-3" />
                                   </Button>
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 w-8 md:h-7 md:w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                                    className="h-7 w-7 md:h-6 md:w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
                                     onClick={() =>
                                       setDeletingTransaction(transaction)
                                     }
                                   >
-                                    <Trash2 className="h-4 w-4 md:h-3.5 md:w-3.5" />
+                                    <Trash2 className="h-3.5 w-3.5 md:h-3 md:w-3" />
                                   </Button>
                                 </div>
                               </div>
