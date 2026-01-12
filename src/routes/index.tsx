@@ -43,7 +43,7 @@ function LoginPage() {
 	const { logWithAuthelia } = useAuth();
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="flex items-center justify-center min-h-screen bg-background">
 			<Card className="w-full max-w-md mx-4">
 				<CardHeader className="text-center">
 					<CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
