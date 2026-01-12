@@ -28,6 +28,8 @@ model User {
   tags            Tag[]
   people          Person[]
   categories      Category[]
+  dailyNotes      DailyNote[]
+  noteHistory     NoteHistory[]
 
   @@unique([email])
   @@map("user")
@@ -190,4 +192,34 @@ model Category {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("category")
+}
+
+model DailyNote {
+  id        String        @id @default(uuid())
+  date      DateTime      @unique
+  content   String
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history   NoteHistory[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+  @@map("daily_notes")
+}
+
+model NoteHistory {
+  id        String    @id @default(uuid())
+  noteId    String
+  note      DailyNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  content   String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@index([noteId])
+  @@index([userId])
+  @@map("note_history")
 }

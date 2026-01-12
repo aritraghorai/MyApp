@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
+import { Route as AuthedNotesRouteRouteImport } from './routes/_authed/notes/route'
 import { Route as AuthedExpensesRouteRouteImport } from './routes/_authed/expenses/route'
+import { Route as AuthedNotesIndexRouteImport } from './routes/_authed/notes/index'
 import { Route as AuthedExpensesIndexRouteImport } from './routes/_authed/expenses/index'
 import { Route as AuthedExpensesSettingsRouteImport } from './routes/_authed/expenses/settings'
 import { Route as AuthedExpensesAccountsRouteImport } from './routes/_authed/expenses/accounts'
@@ -32,10 +34,20 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedNotesRouteRoute = AuthedNotesRouteRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedExpensesRouteRoute = AuthedExpensesRouteRouteImport.update({
   id: '/expenses',
   path: '/expenses',
   getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedNotesIndexRoute = AuthedNotesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthedNotesRouteRoute,
 } as any)
 const AuthedExpensesIndexRoute = AuthedExpensesIndexRouteImport.update({
   id: '/',
@@ -62,10 +74,12 @@ const AuthedExpensesTransactionsIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/expenses': typeof AuthedExpensesRouteRouteWithChildren
+  '/notes': typeof AuthedNotesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/expenses/accounts': typeof AuthedExpensesAccountsRoute
   '/expenses/settings': typeof AuthedExpensesSettingsRoute
   '/expenses/': typeof AuthedExpensesIndexRoute
+  '/notes/': typeof AuthedNotesIndexRoute
   '/expenses/transactions': typeof AuthedExpensesTransactionsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +88,7 @@ export interface FileRoutesByTo {
   '/expenses/accounts': typeof AuthedExpensesAccountsRoute
   '/expenses/settings': typeof AuthedExpensesSettingsRoute
   '/expenses': typeof AuthedExpensesIndexRoute
+  '/notes': typeof AuthedNotesIndexRoute
   '/expenses/transactions': typeof AuthedExpensesTransactionsIndexRoute
 }
 export interface FileRoutesById {
@@ -81,10 +96,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/expenses': typeof AuthedExpensesRouteRouteWithChildren
+  '/_authed/notes': typeof AuthedNotesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/_authed/expenses/accounts': typeof AuthedExpensesAccountsRoute
   '/_authed/expenses/settings': typeof AuthedExpensesSettingsRoute
   '/_authed/expenses/': typeof AuthedExpensesIndexRoute
+  '/_authed/notes/': typeof AuthedNotesIndexRoute
   '/_authed/expenses/transactions/': typeof AuthedExpensesTransactionsIndexRoute
 }
 export interface FileRouteTypes {
@@ -92,10 +109,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/expenses'
+    | '/notes'
     | '/api/$'
     | '/expenses/accounts'
     | '/expenses/settings'
     | '/expenses/'
+    | '/notes/'
     | '/expenses/transactions'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -104,16 +123,19 @@ export interface FileRouteTypes {
     | '/expenses/accounts'
     | '/expenses/settings'
     | '/expenses'
+    | '/notes'
     | '/expenses/transactions'
   id:
     | '__root__'
     | '/'
     | '/_authed'
     | '/_authed/expenses'
+    | '/_authed/notes'
     | '/api/$'
     | '/_authed/expenses/accounts'
     | '/_authed/expenses/settings'
     | '/_authed/expenses/'
+    | '/_authed/notes/'
     | '/_authed/expenses/transactions/'
   fileRoutesById: FileRoutesById
 }
@@ -146,12 +168,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/notes': {
+      id: '/_authed/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof AuthedNotesRouteRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/expenses': {
       id: '/_authed/expenses'
       path: '/expenses'
       fullPath: '/expenses'
       preLoaderRoute: typeof AuthedExpensesRouteRouteImport
       parentRoute: typeof AuthedRoute
+    }
+    '/_authed/notes/': {
+      id: '/_authed/notes/'
+      path: '/'
+      fullPath: '/notes/'
+      preLoaderRoute: typeof AuthedNotesIndexRouteImport
+      parentRoute: typeof AuthedNotesRouteRoute
     }
     '/_authed/expenses/': {
       id: '/_authed/expenses/'
@@ -201,12 +237,25 @@ const AuthedExpensesRouteRouteChildren: AuthedExpensesRouteRouteChildren = {
 const AuthedExpensesRouteRouteWithChildren =
   AuthedExpensesRouteRoute._addFileChildren(AuthedExpensesRouteRouteChildren)
 
+interface AuthedNotesRouteRouteChildren {
+  AuthedNotesIndexRoute: typeof AuthedNotesIndexRoute
+}
+
+const AuthedNotesRouteRouteChildren: AuthedNotesRouteRouteChildren = {
+  AuthedNotesIndexRoute: AuthedNotesIndexRoute,
+}
+
+const AuthedNotesRouteRouteWithChildren =
+  AuthedNotesRouteRoute._addFileChildren(AuthedNotesRouteRouteChildren)
+
 interface AuthedRouteChildren {
   AuthedExpensesRouteRoute: typeof AuthedExpensesRouteRouteWithChildren
+  AuthedNotesRouteRoute: typeof AuthedNotesRouteRouteWithChildren
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedExpensesRouteRoute: AuthedExpensesRouteRouteWithChildren,
+  AuthedNotesRouteRoute: AuthedNotesRouteRouteWithChildren,
 }
 
 const AuthedRouteWithChildren =
