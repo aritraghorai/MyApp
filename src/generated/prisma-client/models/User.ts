@@ -207,6 +207,11 @@ export type UserWhereInput = {
   categories?: Prisma.CategoryListRelationFilter
   dailyNotes?: Prisma.DailyNoteListRelationFilter
   noteHistory?: Prisma.NoteHistoryListRelationFilter
+  noteTags?: Prisma.NoteTagListRelationFilter
+  noteTemplates?: Prisma.NoteTemplateListRelationFilter
+  habits?: Prisma.HabitListRelationFilter
+  habitLogs?: Prisma.HabitLogListRelationFilter
+  todoItems?: Prisma.TodoItemListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -226,6 +231,11 @@ export type UserOrderByWithRelationInput = {
   categories?: Prisma.CategoryOrderByRelationAggregateInput
   dailyNotes?: Prisma.DailyNoteOrderByRelationAggregateInput
   noteHistory?: Prisma.NoteHistoryOrderByRelationAggregateInput
+  noteTags?: Prisma.NoteTagOrderByRelationAggregateInput
+  noteTemplates?: Prisma.NoteTemplateOrderByRelationAggregateInput
+  habits?: Prisma.HabitOrderByRelationAggregateInput
+  habitLogs?: Prisma.HabitLogOrderByRelationAggregateInput
+  todoItems?: Prisma.TodoItemOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -248,6 +258,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   categories?: Prisma.CategoryListRelationFilter
   dailyNotes?: Prisma.DailyNoteListRelationFilter
   noteHistory?: Prisma.NoteHistoryListRelationFilter
+  noteTags?: Prisma.NoteTagListRelationFilter
+  noteTemplates?: Prisma.NoteTemplateListRelationFilter
+  habits?: Prisma.HabitListRelationFilter
+  habitLogs?: Prisma.HabitLogListRelationFilter
+  todoItems?: Prisma.TodoItemListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -293,6 +308,11 @@ export type UserCreateInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -312,6 +332,11 @@ export type UserUncheckedCreateInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -331,6 +356,11 @@ export type UserUpdateInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -350,6 +380,11 @@ export type UserUncheckedUpdateInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -559,6 +594,76 @@ export type UserUpdateOneRequiredWithoutNoteHistoryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNoteHistoryInput, Prisma.UserUpdateWithoutNoteHistoryInput>, Prisma.UserUncheckedUpdateWithoutNoteHistoryInput>
 }
 
+export type UserCreateNestedOneWithoutNoteTagsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNoteTagsInput, Prisma.UserUncheckedCreateWithoutNoteTagsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNoteTagsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNoteTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNoteTagsInput, Prisma.UserUncheckedCreateWithoutNoteTagsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNoteTagsInput
+  upsert?: Prisma.UserUpsertWithoutNoteTagsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNoteTagsInput, Prisma.UserUpdateWithoutNoteTagsInput>, Prisma.UserUncheckedUpdateWithoutNoteTagsInput>
+}
+
+export type UserCreateNestedOneWithoutNoteTemplatesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNoteTemplatesInput, Prisma.UserUncheckedCreateWithoutNoteTemplatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNoteTemplatesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNoteTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNoteTemplatesInput, Prisma.UserUncheckedCreateWithoutNoteTemplatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNoteTemplatesInput
+  upsert?: Prisma.UserUpsertWithoutNoteTemplatesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNoteTemplatesInput, Prisma.UserUpdateWithoutNoteTemplatesInput>, Prisma.UserUncheckedUpdateWithoutNoteTemplatesInput>
+}
+
+export type UserCreateNestedOneWithoutHabitsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHabitsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutHabitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHabitsInput
+  upsert?: Prisma.UserUpsertWithoutHabitsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHabitsInput, Prisma.UserUpdateWithoutHabitsInput>, Prisma.UserUncheckedUpdateWithoutHabitsInput>
+}
+
+export type UserCreateNestedOneWithoutHabitLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHabitLogsInput, Prisma.UserUncheckedCreateWithoutHabitLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHabitLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutHabitLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHabitLogsInput, Prisma.UserUncheckedCreateWithoutHabitLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHabitLogsInput
+  upsert?: Prisma.UserUpsertWithoutHabitLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHabitLogsInput, Prisma.UserUpdateWithoutHabitLogsInput>, Prisma.UserUncheckedUpdateWithoutHabitLogsInput>
+}
+
+export type UserCreateNestedOneWithoutTodoItemsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTodoItemsInput, Prisma.UserUncheckedCreateWithoutTodoItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTodoItemsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTodoItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTodoItemsInput, Prisma.UserUncheckedCreateWithoutTodoItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTodoItemsInput
+  upsert?: Prisma.UserUpsertWithoutTodoItemsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTodoItemsInput, Prisma.UserUpdateWithoutTodoItemsInput>, Prisma.UserUncheckedUpdateWithoutTodoItemsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id: string
   name: string
@@ -575,6 +680,11 @@ export type UserCreateWithoutSessionsInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -593,6 +703,11 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -627,6 +742,11 @@ export type UserUpdateWithoutSessionsInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -645,6 +765,11 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -663,6 +788,11 @@ export type UserCreateWithoutAccountsInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -681,6 +811,11 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -715,6 +850,11 @@ export type UserUpdateWithoutAccountsInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -733,6 +873,11 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExpenseAccountsInput = {
@@ -751,6 +896,11 @@ export type UserCreateWithoutExpenseAccountsInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExpenseAccountsInput = {
@@ -769,6 +919,11 @@ export type UserUncheckedCreateWithoutExpenseAccountsInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExpenseAccountsInput = {
@@ -803,6 +958,11 @@ export type UserUpdateWithoutExpenseAccountsInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpenseAccountsInput = {
@@ -821,6 +981,11 @@ export type UserUncheckedUpdateWithoutExpenseAccountsInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -839,6 +1004,11 @@ export type UserCreateWithoutTransactionsInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -857,6 +1027,11 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -891,6 +1066,11 @@ export type UserUpdateWithoutTransactionsInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -909,6 +1089,11 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTagsInput = {
@@ -927,6 +1112,11 @@ export type UserCreateWithoutTagsInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTagsInput = {
@@ -945,6 +1135,11 @@ export type UserUncheckedCreateWithoutTagsInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTagsInput = {
@@ -979,6 +1174,11 @@ export type UserUpdateWithoutTagsInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTagsInput = {
@@ -997,6 +1197,11 @@ export type UserUncheckedUpdateWithoutTagsInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPeopleInput = {
@@ -1015,6 +1220,11 @@ export type UserCreateWithoutPeopleInput = {
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPeopleInput = {
@@ -1033,6 +1243,11 @@ export type UserUncheckedCreateWithoutPeopleInput = {
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPeopleInput = {
@@ -1067,6 +1282,11 @@ export type UserUpdateWithoutPeopleInput = {
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPeopleInput = {
@@ -1085,6 +1305,11 @@ export type UserUncheckedUpdateWithoutPeopleInput = {
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCategoriesInput = {
@@ -1103,6 +1328,11 @@ export type UserCreateWithoutCategoriesInput = {
   people?: Prisma.PersonCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCategoriesInput = {
@@ -1121,6 +1351,11 @@ export type UserUncheckedCreateWithoutCategoriesInput = {
   people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCategoriesInput = {
@@ -1155,6 +1390,11 @@ export type UserUpdateWithoutCategoriesInput = {
   people?: Prisma.PersonUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCategoriesInput = {
@@ -1173,6 +1413,11 @@ export type UserUncheckedUpdateWithoutCategoriesInput = {
   people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDailyNotesInput = {
@@ -1191,6 +1436,11 @@ export type UserCreateWithoutDailyNotesInput = {
   people?: Prisma.PersonCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDailyNotesInput = {
@@ -1209,6 +1459,11 @@ export type UserUncheckedCreateWithoutDailyNotesInput = {
   people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDailyNotesInput = {
@@ -1243,6 +1498,11 @@ export type UserUpdateWithoutDailyNotesInput = {
   people?: Prisma.PersonUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDailyNotesInput = {
@@ -1261,6 +1521,11 @@ export type UserUncheckedUpdateWithoutDailyNotesInput = {
   people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNoteHistoryInput = {
@@ -1279,6 +1544,11 @@ export type UserCreateWithoutNoteHistoryInput = {
   people?: Prisma.PersonCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNoteHistoryInput = {
@@ -1297,6 +1567,11 @@ export type UserUncheckedCreateWithoutNoteHistoryInput = {
   people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNoteHistoryInput = {
@@ -1331,6 +1606,11 @@ export type UserUpdateWithoutNoteHistoryInput = {
   people?: Prisma.PersonUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNoteHistoryInput = {
@@ -1349,6 +1629,551 @@ export type UserUncheckedUpdateWithoutNoteHistoryInput = {
   people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutNoteTagsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutNoteTagsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutNoteTagsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNoteTagsInput, Prisma.UserUncheckedCreateWithoutNoteTagsInput>
+}
+
+export type UserUpsertWithoutNoteTagsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNoteTagsInput, Prisma.UserUncheckedUpdateWithoutNoteTagsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNoteTagsInput, Prisma.UserUncheckedCreateWithoutNoteTagsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNoteTagsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNoteTagsInput, Prisma.UserUncheckedUpdateWithoutNoteTagsInput>
+}
+
+export type UserUpdateWithoutNoteTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNoteTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutNoteTemplatesInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutNoteTemplatesInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutNoteTemplatesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNoteTemplatesInput, Prisma.UserUncheckedCreateWithoutNoteTemplatesInput>
+}
+
+export type UserUpsertWithoutNoteTemplatesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNoteTemplatesInput, Prisma.UserUncheckedUpdateWithoutNoteTemplatesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNoteTemplatesInput, Prisma.UserUncheckedCreateWithoutNoteTemplatesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNoteTemplatesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNoteTemplatesInput, Prisma.UserUncheckedUpdateWithoutNoteTemplatesInput>
+}
+
+export type UserUpdateWithoutNoteTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNoteTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutHabitsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutHabitsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutHabitsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>
+}
+
+export type UserUpsertWithoutHabitsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutHabitsInput, Prisma.UserUncheckedUpdateWithoutHabitsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutHabitsInput, Prisma.UserUncheckedCreateWithoutHabitsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutHabitsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutHabitsInput, Prisma.UserUncheckedUpdateWithoutHabitsInput>
+}
+
+export type UserUpdateWithoutHabitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutHabitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutHabitLogsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutHabitLogsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  todoItems?: Prisma.TodoItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutHabitLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutHabitLogsInput, Prisma.UserUncheckedCreateWithoutHabitLogsInput>
+}
+
+export type UserUpsertWithoutHabitLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutHabitLogsInput, Prisma.UserUncheckedUpdateWithoutHabitLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutHabitLogsInput, Prisma.UserUncheckedCreateWithoutHabitLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutHabitLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutHabitLogsInput, Prisma.UserUncheckedUpdateWithoutHabitLogsInput>
+}
+
+export type UserUpdateWithoutHabitLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutHabitLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  todoItems?: Prisma.TodoItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTodoItemsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTodoItemsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedCreateNestedManyWithoutUserInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutUserInput
+  people?: Prisma.PersonUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  dailyNotes?: Prisma.DailyNoteUncheckedCreateNestedManyWithoutUserInput
+  noteHistory?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutUserInput
+  noteTags?: Prisma.NoteTagUncheckedCreateNestedManyWithoutUserInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  habitLogs?: Prisma.HabitLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTodoItemsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTodoItemsInput, Prisma.UserUncheckedCreateWithoutTodoItemsInput>
+}
+
+export type UserUpsertWithoutTodoItemsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTodoItemsInput, Prisma.UserUncheckedUpdateWithoutTodoItemsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTodoItemsInput, Prisma.UserUncheckedCreateWithoutTodoItemsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTodoItemsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTodoItemsInput, Prisma.UserUncheckedUpdateWithoutTodoItemsInput>
+}
+
+export type UserUpdateWithoutTodoItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTodoItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  expenseAccounts?: Prisma.ExpenseAccountUncheckedUpdateManyWithoutUserNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutUserNestedInput
+  people?: Prisma.PersonUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  dailyNotes?: Prisma.DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+  noteHistory?: Prisma.NoteHistoryUncheckedUpdateManyWithoutUserNestedInput
+  noteTags?: Prisma.NoteTagUncheckedUpdateManyWithoutUserNestedInput
+  noteTemplates?: Prisma.NoteTemplateUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  habitLogs?: Prisma.HabitLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1366,6 +2191,11 @@ export type UserCountOutputType = {
   categories: number
   dailyNotes: number
   noteHistory: number
+  noteTags: number
+  noteTemplates: number
+  habits: number
+  habitLogs: number
+  todoItems: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1378,6 +2208,11 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   categories?: boolean | UserCountOutputTypeCountCategoriesArgs
   dailyNotes?: boolean | UserCountOutputTypeCountDailyNotesArgs
   noteHistory?: boolean | UserCountOutputTypeCountNoteHistoryArgs
+  noteTags?: boolean | UserCountOutputTypeCountNoteTagsArgs
+  noteTemplates?: boolean | UserCountOutputTypeCountNoteTemplatesArgs
+  habits?: boolean | UserCountOutputTypeCountHabitsArgs
+  habitLogs?: boolean | UserCountOutputTypeCountHabitLogsArgs
+  todoItems?: boolean | UserCountOutputTypeCountTodoItemsArgs
 }
 
 /**
@@ -1453,6 +2288,41 @@ export type UserCountOutputTypeCountNoteHistoryArgs<ExtArgs extends runtime.Type
   where?: Prisma.NoteHistoryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNoteTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteTagWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNoteTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteTemplateWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHabitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HabitWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHabitLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HabitLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTodoItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TodoItemWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1471,6 +2341,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
   dailyNotes?: boolean | Prisma.User$dailyNotesArgs<ExtArgs>
   noteHistory?: boolean | Prisma.User$noteHistoryArgs<ExtArgs>
+  noteTags?: boolean | Prisma.User$noteTagsArgs<ExtArgs>
+  noteTemplates?: boolean | Prisma.User$noteTemplatesArgs<ExtArgs>
+  habits?: boolean | Prisma.User$habitsArgs<ExtArgs>
+  habitLogs?: boolean | Prisma.User$habitLogsArgs<ExtArgs>
+  todoItems?: boolean | Prisma.User$todoItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1515,6 +2390,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
   dailyNotes?: boolean | Prisma.User$dailyNotesArgs<ExtArgs>
   noteHistory?: boolean | Prisma.User$noteHistoryArgs<ExtArgs>
+  noteTags?: boolean | Prisma.User$noteTagsArgs<ExtArgs>
+  noteTemplates?: boolean | Prisma.User$noteTemplatesArgs<ExtArgs>
+  habits?: boolean | Prisma.User$habitsArgs<ExtArgs>
+  habitLogs?: boolean | Prisma.User$habitLogsArgs<ExtArgs>
+  todoItems?: boolean | Prisma.User$todoItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1532,6 +2412,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     categories: Prisma.$CategoryPayload<ExtArgs>[]
     dailyNotes: Prisma.$DailyNotePayload<ExtArgs>[]
     noteHistory: Prisma.$NoteHistoryPayload<ExtArgs>[]
+    noteTags: Prisma.$NoteTagPayload<ExtArgs>[]
+    noteTemplates: Prisma.$NoteTemplatePayload<ExtArgs>[]
+    habits: Prisma.$HabitPayload<ExtArgs>[]
+    habitLogs: Prisma.$HabitLogPayload<ExtArgs>[]
+    todoItems: Prisma.$TodoItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1944,6 +2829,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   categories<T extends Prisma.User$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dailyNotes<T extends Prisma.User$dailyNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dailyNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   noteHistory<T extends Prisma.User$noteHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$noteHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  noteTags<T extends Prisma.User$noteTagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$noteTagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  noteTemplates<T extends Prisma.User$noteTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$noteTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  habits<T extends Prisma.User$habitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$habitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HabitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  habitLogs<T extends Prisma.User$habitLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$habitLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HabitLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  todoItems<T extends Prisma.User$todoItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$todoItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TodoItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2579,6 +3469,126 @@ export type User$noteHistoryArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.NoteHistoryScalarFieldEnum | Prisma.NoteHistoryScalarFieldEnum[]
+}
+
+/**
+ * User.noteTags
+ */
+export type User$noteTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoteTag
+   */
+  select?: Prisma.NoteTagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NoteTag
+   */
+  omit?: Prisma.NoteTagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteTagInclude<ExtArgs> | null
+  where?: Prisma.NoteTagWhereInput
+  orderBy?: Prisma.NoteTagOrderByWithRelationInput | Prisma.NoteTagOrderByWithRelationInput[]
+  cursor?: Prisma.NoteTagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteTagScalarFieldEnum | Prisma.NoteTagScalarFieldEnum[]
+}
+
+/**
+ * User.noteTemplates
+ */
+export type User$noteTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoteTemplate
+   */
+  select?: Prisma.NoteTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NoteTemplate
+   */
+  omit?: Prisma.NoteTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteTemplateInclude<ExtArgs> | null
+  where?: Prisma.NoteTemplateWhereInput
+  orderBy?: Prisma.NoteTemplateOrderByWithRelationInput | Prisma.NoteTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.NoteTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteTemplateScalarFieldEnum | Prisma.NoteTemplateScalarFieldEnum[]
+}
+
+/**
+ * User.habits
+ */
+export type User$habitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Habit
+   */
+  select?: Prisma.HabitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Habit
+   */
+  omit?: Prisma.HabitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HabitInclude<ExtArgs> | null
+  where?: Prisma.HabitWhereInput
+  orderBy?: Prisma.HabitOrderByWithRelationInput | Prisma.HabitOrderByWithRelationInput[]
+  cursor?: Prisma.HabitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HabitScalarFieldEnum | Prisma.HabitScalarFieldEnum[]
+}
+
+/**
+ * User.habitLogs
+ */
+export type User$habitLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HabitLog
+   */
+  select?: Prisma.HabitLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HabitLog
+   */
+  omit?: Prisma.HabitLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HabitLogInclude<ExtArgs> | null
+  where?: Prisma.HabitLogWhereInput
+  orderBy?: Prisma.HabitLogOrderByWithRelationInput | Prisma.HabitLogOrderByWithRelationInput[]
+  cursor?: Prisma.HabitLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HabitLogScalarFieldEnum | Prisma.HabitLogScalarFieldEnum[]
+}
+
+/**
+ * User.todoItems
+ */
+export type User$todoItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TodoItem
+   */
+  select?: Prisma.TodoItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TodoItem
+   */
+  omit?: Prisma.TodoItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TodoItemInclude<ExtArgs> | null
+  where?: Prisma.TodoItemWhereInput
+  orderBy?: Prisma.TodoItemOrderByWithRelationInput | Prisma.TodoItemOrderByWithRelationInput[]
+  cursor?: Prisma.TodoItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TodoItemScalarFieldEnum | Prisma.TodoItemScalarFieldEnum[]
 }
 
 /**

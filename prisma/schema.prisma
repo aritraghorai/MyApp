@@ -30,6 +30,11 @@ model User {
   categories      Category[]
   dailyNotes      DailyNote[]
   noteHistory     NoteHistory[]
+  noteTags        NoteTag[]
+  noteTemplates   NoteTemplate[]
+  habits          Habit[]
+  habitLogs       HabitLog[]
+  todoItems       TodoItem[]
 
   @@unique([email])
   @@map("user")
@@ -195,14 +200,19 @@ model Category {
 }
 
 model DailyNote {
-  id        String        @id @default(uuid())
-  date      DateTime      @unique
-  content   String
-  userId    String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  history   NoteHistory[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id          String         @id @default(uuid())
+  date        DateTime       @unique
+  content     String
+  mood        Int? // 1-5 scale (1=bad, 5=great)
+  wordCount   Int            @default(0)
+  hasTemplate Boolean        @default(false)
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history     NoteHistory[]
+  tags        DailyNoteTag[]
+  todos       TodoItem[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
   @@unique([userId, date])
   @@index([userId])
@@ -222,4 +232,123 @@ model NoteHistory {
   @@index([noteId])
   @@index([userId])
   @@map("note_history")
+}
+
+// ============================================
+// Advanced Notes Features
+// ============================================
+
+enum HabitFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum TodoPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model NoteTag {
+  id        String         @id @default(uuid())
+  name      String
+  color     String         @default("#3b82f6") // Hex color code
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes     DailyNoteTag[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+  @@map("note_tags")
+}
+
+model DailyNoteTag {
+  noteId String
+  note   DailyNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    NoteTag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index([noteId])
+  @@index([tagId])
+  @@map("daily_note_tags")
+}
+
+model NoteTemplate {
+  id        String   @id @default(uuid())
+  name      String
+  content   String // Template content with variables like {{date}}, {{day}}
+  category  String   @default("Custom") // e.g., "Work", "Personal", "Journal"
+  isDefault Boolean  @default(false) // System-provided templates
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+  @@index([category])
+  @@map("note_templates")
+}
+
+model Habit {
+  id             String         @id @default(uuid())
+  name           String
+  description    String?
+  color          String         @default("#8b5cf6") // Hex color code
+  frequency      HabitFrequency @default(DAILY)
+  endDate        DateTime? // Optional end date for time-bound habits
+  metadataSchema Json? // Define what metadata fields this habit tracks
+  // Example: { "weight": "number", "reps": "number", "sets": "number" }
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs           HabitLog[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+  @@map("habits")
+}
+
+model HabitLog {
+  id        String   @id @default(uuid())
+  habitId   String
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  date      DateTime // Date of the habit log
+  completed Boolean  @default(false)
+  metadata  Json? // Store actual metadata values for this log
+  // Example: { "weight": 75.5, "reps": 10, "sets": 3 }
+  notes     String? // Optional notes for this log entry
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([habitId, date])
+  @@index([habitId])
+  @@index([userId])
+  @@index([date])
+  @@map("habit_logs")
+}
+
+model TodoItem {
+  id        String       @id @default(uuid())
+  noteId    String
+  note      DailyNote    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  content   String
+  completed Boolean      @default(false)
+  priority  TodoPriority @default(MEDIUM)
+  position  Int          @default(0) // Order in the list
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([noteId])
+  @@index([userId])
+  @@index([completed])
+  @@map("todo_items")
 }

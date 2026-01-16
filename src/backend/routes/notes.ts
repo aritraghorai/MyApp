@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "@/lib/prisma";
+import { calculateWordCount, parseTodos } from "@/lib/todo-parser";
 import { authPlugin } from "../auth-plugin";
 
 export const notes = new Elysia({ prefix: "/notes" })
@@ -8,6 +9,7 @@ export const notes = new Elysia({ prefix: "/notes" })
         note: t.Object({
             date: t.String(), // ISO Date string (YYYY-MM-DD)
             content: t.String(),
+            mood: t.Optional(t.Number()), // 1-5 scale
         }),
     })
     .get(
@@ -28,6 +30,16 @@ export const notes = new Elysia({ prefix: "/notes" })
                     userId: user.id,
                     date: targetDate,
                 },
+                include: {
+                    tags: {
+                        include: {
+                            tag: true,
+                        },
+                    },
+                    todos: {
+                        orderBy: { position: "asc" },
+                    },
+                },
             });
 
             return note;
@@ -42,7 +54,7 @@ export const notes = new Elysia({ prefix: "/notes" })
     .get(
         "/range",
         async ({ query, user }) => {
-            const { from, to } = query;
+            const { from, to, tags, mood } = query;
 
             const fromDate = new Date(from);
             fromDate.setHours(0, 0, 0, 0);
@@ -50,13 +62,42 @@ export const notes = new Elysia({ prefix: "/notes" })
             const toDate = new Date(to);
             toDate.setHours(23, 59, 59, 999);
 
-            const notes = await prisma.dailyNote.findMany({
-                where: {
-                    userId: user.id,
-                    date: {
-                        gte: fromDate,
-                        lte: toDate,
+            const where: any = {
+                userId: user.id,
+                date: {
+                    gte: fromDate,
+                    lte: toDate,
+                },
+            };
+
+            // Filter by mood if provided
+            if (mood) {
+                where.mood = parseInt(mood);
+            }
+
+            // Filter by tags if provided
+            if (tags) {
+                const tagNames = tags.split(",");
+                where.tags = {
+                    some: {
+                        tag: {
+                            name: {
+                                in: tagNames,
+                            },
+                        },
                     },
+                };
+            }
+
+            const notes = await prisma.dailyNote.findMany({
+                where,
+                include: {
+                    tags: {
+                        include: {
+                            tag: true,
+                        },
+                    },
+                    todos: true,
                 },
                 orderBy: {
                     date: "desc",
@@ -70,17 +111,25 @@ export const notes = new Elysia({ prefix: "/notes" })
             query: t.Object({
                 from: t.String(),
                 to: t.String(),
+                tags: t.Optional(t.String()), // Comma-separated tag names
+                mood: t.Optional(t.String()), // 1-5
             }),
         },
     )
     .post(
         "/",
-        async ({ body, user, set }) => {
-            const { date, content } = body;
+        async ({ body, user }) => {
+            const { date, content, mood } = body;
 
             // Parse the date string to start of day
             const targetDate = new Date(date);
             targetDate.setHours(0, 0, 0, 0);
+
+            // Calculate word count
+            const wordCount = calculateWordCount(content);
+
+            // Parse todos from content
+            const parsedTodos = parseTodos(content);
 
             // Check if a note already exists for this date
             const existing = await prisma.dailyNote.findFirst({
@@ -101,20 +150,64 @@ export const notes = new Elysia({ prefix: "/notes" })
                 });
 
                 // Update existing note
-                return await prisma.dailyNote.update({
+                const updated = await prisma.dailyNote.update({
                     where: { id: existing.id },
-                    data: { content },
+                    data: {
+                        content,
+                        wordCount,
+                        mood: mood !== undefined ? mood : existing.mood,
+                    },
                 });
+
+                // Update todos
+                // Delete existing todos
+                await prisma.todoItem.deleteMany({
+                    where: { noteId: existing.id },
+                });
+
+                // Create new todos
+                if (parsedTodos.length > 0) {
+                    await prisma.todoItem.createMany({
+                        data: parsedTodos.map((todo) => ({
+                            noteId: existing.id,
+                            content: todo.content,
+                            completed: todo.completed,
+                            priority: todo.priority,
+                            position: todo.position,
+                            userId: user.id,
+                        })),
+                    });
+                }
+
+                return updated;
             }
 
             // Create new note
-            return await prisma.dailyNote.create({
+            const newNote = await prisma.dailyNote.create({
                 data: {
                     date: targetDate,
                     content,
+                    wordCount,
+                    mood,
                     userId: user.id,
                 },
             });
+
+            // Create todos
+            if (parsedTodos.length > 0) {
+                await prisma.todoItem.createMany({
+                    data: parsedTodos.map((todo) => ({
+                        noteId: newNote.id,
+                        content: todo.content,
+                        completed: todo.completed,
+                        priority: todo.priority,
+                        position: todo.position,
+                        userId: user.id,
+                    })),
+                });
+            }
+
+            return newNote;
         },
         {
             auth: true,

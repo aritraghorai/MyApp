@@ -62,7 +62,13 @@ export const ModelName = {
   Person: 'Person',
   Category: 'Category',
   DailyNote: 'DailyNote',
-  NoteHistory: 'NoteHistory'
+  NoteHistory: 'NoteHistory',
+  NoteTag: 'NoteTag',
+  DailyNoteTag: 'DailyNoteTag',
+  NoteTemplate: 'NoteTemplate',
+  Habit: 'Habit',
+  HabitLog: 'HabitLog',
+  TodoItem: 'TodoItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -214,6 +220,9 @@ export const DailyNoteScalarFieldEnum = {
   id: 'id',
   date: 'date',
   content: 'content',
+  mood: 'mood',
+  wordCount: 'wordCount',
+  hasTemplate: 'hasTemplate',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -233,6 +242,85 @@ export const NoteHistoryScalarFieldEnum = {
 export type NoteHistoryScalarFieldEnum = (typeof NoteHistoryScalarFieldEnum)[keyof typeof NoteHistoryScalarFieldEnum]
 
 
+export const NoteTagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  color: 'color',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NoteTagScalarFieldEnum = (typeof NoteTagScalarFieldEnum)[keyof typeof NoteTagScalarFieldEnum]
+
+
+export const DailyNoteTagScalarFieldEnum = {
+  noteId: 'noteId',
+  tagId: 'tagId'
+} as const
+
+export type DailyNoteTagScalarFieldEnum = (typeof DailyNoteTagScalarFieldEnum)[keyof typeof DailyNoteTagScalarFieldEnum]
+
+
+export const NoteTemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  content: 'content',
+  category: 'category',
+  isDefault: 'isDefault',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NoteTemplateScalarFieldEnum = (typeof NoteTemplateScalarFieldEnum)[keyof typeof NoteTemplateScalarFieldEnum]
+
+
+export const HabitScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  frequency: 'frequency',
+  endDate: 'endDate',
+  metadataSchema: 'metadataSchema',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HabitScalarFieldEnum = (typeof HabitScalarFieldEnum)[keyof typeof HabitScalarFieldEnum]
+
+
+export const HabitLogScalarFieldEnum = {
+  id: 'id',
+  habitId: 'habitId',
+  date: 'date',
+  completed: 'completed',
+  metadata: 'metadata',
+  notes: 'notes',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type HabitLogScalarFieldEnum = (typeof HabitLogScalarFieldEnum)[keyof typeof HabitLogScalarFieldEnum]
+
+
+export const TodoItemScalarFieldEnum = {
+  id: 'id',
+  noteId: 'noteId',
+  content: 'content',
+  completed: 'completed',
+  priority: 'priority',
+  position: 'position',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TodoItemScalarFieldEnum = (typeof TodoItemScalarFieldEnum)[keyof typeof TodoItemScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -241,10 +329,35 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull'
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull',
+  AnyNull: 'AnyNull'
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 

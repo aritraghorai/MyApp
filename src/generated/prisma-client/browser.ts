@@ -77,3 +77,33 @@ export type DailyNote = Prisma.DailyNoteModel
  * 
  */
 export type NoteHistory = Prisma.NoteHistoryModel
+/**
+ * Model NoteTag
+ * 
+ */
+export type NoteTag = Prisma.NoteTagModel
+/**
+ * Model DailyNoteTag
+ * 
+ */
+export type DailyNoteTag = Prisma.DailyNoteTagModel
+/**
+ * Model NoteTemplate
+ * 
+ */
+export type NoteTemplate = Prisma.NoteTemplateModel
+/**
+ * Model Habit
+ * 
+ */
+export type Habit = Prisma.HabitModel
+/**
+ * Model HabitLog
+ * 
+ */
+export type HabitLog = Prisma.HabitLogModel
+/**
+ * Model TodoItem
+ * 
+ */
+export type TodoItem = Prisma.TodoItemModel

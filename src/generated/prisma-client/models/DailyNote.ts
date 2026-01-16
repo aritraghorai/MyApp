@@ -20,14 +20,29 @@ export type DailyNoteModel = runtime.Types.Result.DefaultSelection<Prisma.$Daily
 
 export type AggregateDailyNote = {
   _count: DailyNoteCountAggregateOutputType | null
+  _avg: DailyNoteAvgAggregateOutputType | null
+  _sum: DailyNoteSumAggregateOutputType | null
   _min: DailyNoteMinAggregateOutputType | null
   _max: DailyNoteMaxAggregateOutputType | null
+}
+
+export type DailyNoteAvgAggregateOutputType = {
+  mood: number | null
+  wordCount: number | null
+}
+
+export type DailyNoteSumAggregateOutputType = {
+  mood: number | null
+  wordCount: number | null
 }
 
 export type DailyNoteMinAggregateOutputType = {
   id: string | null
   date: Date | null
   content: string | null
+  mood: number | null
+  wordCount: number | null
+  hasTemplate: boolean | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -37,6 +52,9 @@ export type DailyNoteMaxAggregateOutputType = {
   id: string | null
   date: Date | null
   content: string | null
+  mood: number | null
+  wordCount: number | null
+  hasTemplate: boolean | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -46,6 +64,9 @@ export type DailyNoteCountAggregateOutputType = {
   id: number
   date: number
   content: number
+  mood: number
+  wordCount: number
+  hasTemplate: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -53,10 +74,23 @@ export type DailyNoteCountAggregateOutputType = {
 }
 
 
+export type DailyNoteAvgAggregateInputType = {
+  mood?: true
+  wordCount?: true
+}
+
+export type DailyNoteSumAggregateInputType = {
+  mood?: true
+  wordCount?: true
+}
+
 export type DailyNoteMinAggregateInputType = {
   id?: true
   date?: true
   content?: true
+  mood?: true
+  wordCount?: true
+  hasTemplate?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -66,6 +100,9 @@ export type DailyNoteMaxAggregateInputType = {
   id?: true
   date?: true
   content?: true
+  mood?: true
+  wordCount?: true
+  hasTemplate?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -75,6 +112,9 @@ export type DailyNoteCountAggregateInputType = {
   id?: true
   date?: true
   content?: true
+  mood?: true
+  wordCount?: true
+  hasTemplate?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -119,6 +159,18 @@ export type DailyNoteAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: DailyNoteAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: DailyNoteSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: DailyNoteMinAggregateInputType
@@ -149,6 +201,8 @@ export type DailyNoteGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   _count?: DailyNoteCountAggregateInputType | true
+  _avg?: DailyNoteAvgAggregateInputType
+  _sum?: DailyNoteSumAggregateInputType
   _min?: DailyNoteMinAggregateInputType
   _max?: DailyNoteMaxAggregateInputType
 }
@@ -157,10 +211,15 @@ export type DailyNoteGroupByOutputType = {
   id: string
   date: Date
   content: string
+  mood: number | null
+  wordCount: number
+  hasTemplate: boolean
   userId: string
   createdAt: Date
   updatedAt: Date
   _count: DailyNoteCountAggregateOutputType | null
+  _avg: DailyNoteAvgAggregateOutputType | null
+  _sum: DailyNoteSumAggregateOutputType | null
   _min: DailyNoteMinAggregateOutputType | null
   _max: DailyNoteMaxAggregateOutputType | null
 }
@@ -187,22 +246,32 @@ export type DailyNoteWhereInput = {
   id?: Prisma.StringFilter<"DailyNote"> | string
   date?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   content?: Prisma.StringFilter<"DailyNote"> | string
+  mood?: Prisma.IntNullableFilter<"DailyNote"> | number | null
+  wordCount?: Prisma.IntFilter<"DailyNote"> | number
+  hasTemplate?: Prisma.BoolFilter<"DailyNote"> | boolean
   userId?: Prisma.StringFilter<"DailyNote"> | string
   createdAt?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   history?: Prisma.NoteHistoryListRelationFilter
+  tags?: Prisma.DailyNoteTagListRelationFilter
+  todos?: Prisma.TodoItemListRelationFilter
 }
 
 export type DailyNoteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   date?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  mood?: Prisma.SortOrderInput | Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
+  hasTemplate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   history?: Prisma.NoteHistoryOrderByRelationAggregateInput
+  tags?: Prisma.DailyNoteTagOrderByRelationAggregateInput
+  todos?: Prisma.TodoItemOrderByRelationAggregateInput
 }
 
 export type DailyNoteWhereUniqueInput = Prisma.AtLeast<{
@@ -213,23 +282,33 @@ export type DailyNoteWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DailyNoteWhereInput[]
   NOT?: Prisma.DailyNoteWhereInput | Prisma.DailyNoteWhereInput[]
   content?: Prisma.StringFilter<"DailyNote"> | string
+  mood?: Prisma.IntNullableFilter<"DailyNote"> | number | null
+  wordCount?: Prisma.IntFilter<"DailyNote"> | number
+  hasTemplate?: Prisma.BoolFilter<"DailyNote"> | boolean
   userId?: Prisma.StringFilter<"DailyNote"> | string
   createdAt?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   history?: Prisma.NoteHistoryListRelationFilter
+  tags?: Prisma.DailyNoteTagListRelationFilter
+  todos?: Prisma.TodoItemListRelationFilter
 }, "id" | "date" | "userId_date">
 
 export type DailyNoteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   date?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  mood?: Prisma.SortOrderInput | Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
+  hasTemplate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DailyNoteCountOrderByAggregateInput
+  _avg?: Prisma.DailyNoteAvgOrderByAggregateInput
   _max?: Prisma.DailyNoteMaxOrderByAggregateInput
   _min?: Prisma.DailyNoteMinOrderByAggregateInput
+  _sum?: Prisma.DailyNoteSumOrderByAggregateInput
 }
 
 export type DailyNoteScalarWhereWithAggregatesInput = {
@@ -239,6 +318,9 @@ export type DailyNoteScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DailyNote"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
   content?: Prisma.StringWithAggregatesFilter<"DailyNote"> | string
+  mood?: Prisma.IntNullableWithAggregatesFilter<"DailyNote"> | number | null
+  wordCount?: Prisma.IntWithAggregatesFilter<"DailyNote"> | number
+  hasTemplate?: Prisma.BoolWithAggregatesFilter<"DailyNote"> | boolean
   userId?: Prisma.StringWithAggregatesFilter<"DailyNote"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
@@ -248,46 +330,69 @@ export type DailyNoteCreateInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDailyNotesInput
   history?: Prisma.NoteHistoryCreateNestedManyWithoutNoteInput
+  tags?: Prisma.DailyNoteTagCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemCreateNestedManyWithoutNoteInput
 }
 
 export type DailyNoteUncheckedCreateInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   history?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutNoteInput
+  tags?: Prisma.DailyNoteTagUncheckedCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type DailyNoteUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDailyNotesNestedInput
   history?: Prisma.NoteHistoryUpdateManyWithoutNoteNestedInput
+  tags?: Prisma.DailyNoteTagUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUpdateManyWithoutNoteNestedInput
 }
 
 export type DailyNoteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   history?: Prisma.NoteHistoryUncheckedUpdateManyWithoutNoteNestedInput
+  tags?: Prisma.DailyNoteTagUncheckedUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type DailyNoteCreateManyInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -297,6 +402,9 @@ export type DailyNoteUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -305,6 +413,9 @@ export type DailyNoteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -329,15 +440,26 @@ export type DailyNoteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   date?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  mood?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
+  hasTemplate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type DailyNoteAvgOrderByAggregateInput = {
+  mood?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DailyNoteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   date?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  mood?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
+  hasTemplate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -347,9 +469,17 @@ export type DailyNoteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   date?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  mood?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
+  hasTemplate?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type DailyNoteSumOrderByAggregateInput = {
+  mood?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DailyNoteScalarRelationFilter = {
@@ -399,6 +529,14 @@ export type DailyNoteUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.DailyNoteScalarWhereInput | Prisma.DailyNoteScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DailyNoteCreateNestedOneWithoutHistoryInput = {
   create?: Prisma.XOR<Prisma.DailyNoteCreateWithoutHistoryInput, Prisma.DailyNoteUncheckedCreateWithoutHistoryInput>
   connectOrCreate?: Prisma.DailyNoteCreateOrConnectWithoutHistoryInput
@@ -413,22 +551,60 @@ export type DailyNoteUpdateOneRequiredWithoutHistoryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DailyNoteUpdateToOneWithWhereWithoutHistoryInput, Prisma.DailyNoteUpdateWithoutHistoryInput>, Prisma.DailyNoteUncheckedUpdateWithoutHistoryInput>
 }
 
+export type DailyNoteCreateNestedOneWithoutTagsInput = {
+  create?: Prisma.XOR<Prisma.DailyNoteCreateWithoutTagsInput, Prisma.DailyNoteUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.DailyNoteCreateOrConnectWithoutTagsInput
+  connect?: Prisma.DailyNoteWhereUniqueInput
+}
+
+export type DailyNoteUpdateOneRequiredWithoutTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.DailyNoteCreateWithoutTagsInput, Prisma.DailyNoteUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.DailyNoteCreateOrConnectWithoutTagsInput
+  upsert?: Prisma.DailyNoteUpsertWithoutTagsInput
+  connect?: Prisma.DailyNoteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DailyNoteUpdateToOneWithWhereWithoutTagsInput, Prisma.DailyNoteUpdateWithoutTagsInput>, Prisma.DailyNoteUncheckedUpdateWithoutTagsInput>
+}
+
+export type DailyNoteCreateNestedOneWithoutTodosInput = {
+  create?: Prisma.XOR<Prisma.DailyNoteCreateWithoutTodosInput, Prisma.DailyNoteUncheckedCreateWithoutTodosInput>
+  connectOrCreate?: Prisma.DailyNoteCreateOrConnectWithoutTodosInput
+  connect?: Prisma.DailyNoteWhereUniqueInput
+}
+
+export type DailyNoteUpdateOneRequiredWithoutTodosNestedInput = {
+  create?: Prisma.XOR<Prisma.DailyNoteCreateWithoutTodosInput, Prisma.DailyNoteUncheckedCreateWithoutTodosInput>
+  connectOrCreate?: Prisma.DailyNoteCreateOrConnectWithoutTodosInput
+  upsert?: Prisma.DailyNoteUpsertWithoutTodosInput
+  connect?: Prisma.DailyNoteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DailyNoteUpdateToOneWithWhereWithoutTodosInput, Prisma.DailyNoteUpdateWithoutTodosInput>, Prisma.DailyNoteUncheckedUpdateWithoutTodosInput>
+}
+
 export type DailyNoteCreateWithoutUserInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   history?: Prisma.NoteHistoryCreateNestedManyWithoutNoteInput
+  tags?: Prisma.DailyNoteTagCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemCreateNestedManyWithoutNoteInput
 }
 
 export type DailyNoteUncheckedCreateWithoutUserInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   history?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutNoteInput
+  tags?: Prisma.DailyNoteTagUncheckedCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type DailyNoteCreateOrConnectWithoutUserInput = {
@@ -463,6 +639,9 @@ export type DailyNoteScalarWhereInput = {
   id?: Prisma.StringFilter<"DailyNote"> | string
   date?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   content?: Prisma.StringFilter<"DailyNote"> | string
+  mood?: Prisma.IntNullableFilter<"DailyNote"> | number | null
+  wordCount?: Prisma.IntFilter<"DailyNote"> | number
+  hasTemplate?: Prisma.BoolFilter<"DailyNote"> | boolean
   userId?: Prisma.StringFilter<"DailyNote"> | string
   createdAt?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DailyNote"> | Date | string
@@ -472,18 +651,28 @@ export type DailyNoteCreateWithoutHistoryInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDailyNotesInput
+  tags?: Prisma.DailyNoteTagCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemCreateNestedManyWithoutNoteInput
 }
 
 export type DailyNoteUncheckedCreateWithoutHistoryInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  tags?: Prisma.DailyNoteTagUncheckedCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type DailyNoteCreateOrConnectWithoutHistoryInput = {
@@ -506,24 +695,181 @@ export type DailyNoteUpdateWithoutHistoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDailyNotesNestedInput
+  tags?: Prisma.DailyNoteTagUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUpdateManyWithoutNoteNestedInput
 }
 
 export type DailyNoteUncheckedUpdateWithoutHistoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tags?: Prisma.DailyNoteTagUncheckedUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUncheckedUpdateManyWithoutNoteNestedInput
+}
+
+export type DailyNoteCreateWithoutTagsInput = {
+  id?: string
+  date: Date | string
+  content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDailyNotesInput
+  history?: Prisma.NoteHistoryCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemCreateNestedManyWithoutNoteInput
+}
+
+export type DailyNoteUncheckedCreateWithoutTagsInput = {
+  id?: string
+  date: Date | string
+  content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  history?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutNoteInput
+  todos?: Prisma.TodoItemUncheckedCreateNestedManyWithoutNoteInput
+}
+
+export type DailyNoteCreateOrConnectWithoutTagsInput = {
+  where: Prisma.DailyNoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.DailyNoteCreateWithoutTagsInput, Prisma.DailyNoteUncheckedCreateWithoutTagsInput>
+}
+
+export type DailyNoteUpsertWithoutTagsInput = {
+  update: Prisma.XOR<Prisma.DailyNoteUpdateWithoutTagsInput, Prisma.DailyNoteUncheckedUpdateWithoutTagsInput>
+  create: Prisma.XOR<Prisma.DailyNoteCreateWithoutTagsInput, Prisma.DailyNoteUncheckedCreateWithoutTagsInput>
+  where?: Prisma.DailyNoteWhereInput
+}
+
+export type DailyNoteUpdateToOneWithWhereWithoutTagsInput = {
+  where?: Prisma.DailyNoteWhereInput
+  data: Prisma.XOR<Prisma.DailyNoteUpdateWithoutTagsInput, Prisma.DailyNoteUncheckedUpdateWithoutTagsInput>
+}
+
+export type DailyNoteUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDailyNotesNestedInput
+  history?: Prisma.NoteHistoryUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUpdateManyWithoutNoteNestedInput
+}
+
+export type DailyNoteUncheckedUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  history?: Prisma.NoteHistoryUncheckedUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUncheckedUpdateManyWithoutNoteNestedInput
+}
+
+export type DailyNoteCreateWithoutTodosInput = {
+  id?: string
+  date: Date | string
+  content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDailyNotesInput
+  history?: Prisma.NoteHistoryCreateNestedManyWithoutNoteInput
+  tags?: Prisma.DailyNoteTagCreateNestedManyWithoutNoteInput
+}
+
+export type DailyNoteUncheckedCreateWithoutTodosInput = {
+  id?: string
+  date: Date | string
+  content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  history?: Prisma.NoteHistoryUncheckedCreateNestedManyWithoutNoteInput
+  tags?: Prisma.DailyNoteTagUncheckedCreateNestedManyWithoutNoteInput
+}
+
+export type DailyNoteCreateOrConnectWithoutTodosInput = {
+  where: Prisma.DailyNoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.DailyNoteCreateWithoutTodosInput, Prisma.DailyNoteUncheckedCreateWithoutTodosInput>
+}
+
+export type DailyNoteUpsertWithoutTodosInput = {
+  update: Prisma.XOR<Prisma.DailyNoteUpdateWithoutTodosInput, Prisma.DailyNoteUncheckedUpdateWithoutTodosInput>
+  create: Prisma.XOR<Prisma.DailyNoteCreateWithoutTodosInput, Prisma.DailyNoteUncheckedCreateWithoutTodosInput>
+  where?: Prisma.DailyNoteWhereInput
+}
+
+export type DailyNoteUpdateToOneWithWhereWithoutTodosInput = {
+  where?: Prisma.DailyNoteWhereInput
+  data: Prisma.XOR<Prisma.DailyNoteUpdateWithoutTodosInput, Prisma.DailyNoteUncheckedUpdateWithoutTodosInput>
+}
+
+export type DailyNoteUpdateWithoutTodosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDailyNotesNestedInput
+  history?: Prisma.NoteHistoryUpdateManyWithoutNoteNestedInput
+  tags?: Prisma.DailyNoteTagUpdateManyWithoutNoteNestedInput
+}
+
+export type DailyNoteUncheckedUpdateWithoutTodosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  history?: Prisma.NoteHistoryUncheckedUpdateManyWithoutNoteNestedInput
+  tags?: Prisma.DailyNoteTagUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type DailyNoteCreateManyUserInput = {
   id?: string
   date: Date | string
   content: string
+  mood?: number | null
+  wordCount?: number
+  hasTemplate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -532,24 +878,37 @@ export type DailyNoteUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   history?: Prisma.NoteHistoryUpdateManyWithoutNoteNestedInput
+  tags?: Prisma.DailyNoteTagUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUpdateManyWithoutNoteNestedInput
 }
 
 export type DailyNoteUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   history?: Prisma.NoteHistoryUncheckedUpdateManyWithoutNoteNestedInput
+  tags?: Prisma.DailyNoteTagUncheckedUpdateManyWithoutNoteNestedInput
+  todos?: Prisma.TodoItemUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type DailyNoteUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  mood?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  hasTemplate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -561,10 +920,14 @@ export type DailyNoteUncheckedUpdateManyWithoutUserInput = {
 
 export type DailyNoteCountOutputType = {
   history: number
+  tags: number
+  todos: number
 }
 
 export type DailyNoteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   history?: boolean | DailyNoteCountOutputTypeCountHistoryArgs
+  tags?: boolean | DailyNoteCountOutputTypeCountTagsArgs
+  todos?: boolean | DailyNoteCountOutputTypeCountTodosArgs
 }
 
 /**
@@ -584,16 +947,35 @@ export type DailyNoteCountOutputTypeCountHistoryArgs<ExtArgs extends runtime.Typ
   where?: Prisma.NoteHistoryWhereInput
 }
 
+/**
+ * DailyNoteCountOutputType without action
+ */
+export type DailyNoteCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DailyNoteTagWhereInput
+}
+
+/**
+ * DailyNoteCountOutputType without action
+ */
+export type DailyNoteCountOutputTypeCountTodosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TodoItemWhereInput
+}
+
 
 export type DailyNoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   date?: boolean
   content?: boolean
+  mood?: boolean
+  wordCount?: boolean
+  hasTemplate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   history?: boolean | Prisma.DailyNote$historyArgs<ExtArgs>
+  tags?: boolean | Prisma.DailyNote$tagsArgs<ExtArgs>
+  todos?: boolean | Prisma.DailyNote$todosArgs<ExtArgs>
   _count?: boolean | Prisma.DailyNoteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyNote"]>
 
@@ -601,6 +983,9 @@ export type DailyNoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   date?: boolean
   content?: boolean
+  mood?: boolean
+  wordCount?: boolean
+  hasTemplate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -611,6 +996,9 @@ export type DailyNoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   date?: boolean
   content?: boolean
+  mood?: boolean
+  wordCount?: boolean
+  hasTemplate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -621,15 +1009,20 @@ export type DailyNoteSelectScalar = {
   id?: boolean
   date?: boolean
   content?: boolean
+  mood?: boolean
+  wordCount?: boolean
+  hasTemplate?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DailyNoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "date" | "content" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["dailyNote"]>
+export type DailyNoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "date" | "content" | "mood" | "wordCount" | "hasTemplate" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["dailyNote"]>
 export type DailyNoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   history?: boolean | Prisma.DailyNote$historyArgs<ExtArgs>
+  tags?: boolean | Prisma.DailyNote$tagsArgs<ExtArgs>
+  todos?: boolean | Prisma.DailyNote$todosArgs<ExtArgs>
   _count?: boolean | Prisma.DailyNoteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DailyNoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -644,11 +1037,16 @@ export type $DailyNotePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     history: Prisma.$NoteHistoryPayload<ExtArgs>[]
+    tags: Prisma.$DailyNoteTagPayload<ExtArgs>[]
+    todos: Prisma.$TodoItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     date: Date
     content: string
+    mood: number | null
+    wordCount: number
+    hasTemplate: boolean
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -1048,6 +1446,8 @@ export interface Prisma__DailyNoteClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   history<T extends Prisma.DailyNote$historyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DailyNote$historyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tags<T extends Prisma.DailyNote$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DailyNote$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyNoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  todos<T extends Prisma.DailyNote$todosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DailyNote$todosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TodoItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1080,6 +1480,9 @@ export interface DailyNoteFieldRefs {
   readonly id: Prisma.FieldRef<"DailyNote", 'String'>
   readonly date: Prisma.FieldRef<"DailyNote", 'DateTime'>
   readonly content: Prisma.FieldRef<"DailyNote", 'String'>
+  readonly mood: Prisma.FieldRef<"DailyNote", 'Int'>
+  readonly wordCount: Prisma.FieldRef<"DailyNote", 'Int'>
+  readonly hasTemplate: Prisma.FieldRef<"DailyNote", 'Boolean'>
   readonly userId: Prisma.FieldRef<"DailyNote", 'String'>
   readonly createdAt: Prisma.FieldRef<"DailyNote", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DailyNote", 'DateTime'>
@@ -1498,6 +1901,54 @@ export type DailyNote$historyArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.NoteHistoryScalarFieldEnum | Prisma.NoteHistoryScalarFieldEnum[]
+}
+
+/**
+ * DailyNote.tags
+ */
+export type DailyNote$tagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DailyNoteTag
+   */
+  select?: Prisma.DailyNoteTagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DailyNoteTag
+   */
+  omit?: Prisma.DailyNoteTagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DailyNoteTagInclude<ExtArgs> | null
+  where?: Prisma.DailyNoteTagWhereInput
+  orderBy?: Prisma.DailyNoteTagOrderByWithRelationInput | Prisma.DailyNoteTagOrderByWithRelationInput[]
+  cursor?: Prisma.DailyNoteTagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DailyNoteTagScalarFieldEnum | Prisma.DailyNoteTagScalarFieldEnum[]
+}
+
+/**
+ * DailyNote.todos
+ */
+export type DailyNote$todosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TodoItem
+   */
+  select?: Prisma.TodoItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TodoItem
+   */
+  omit?: Prisma.TodoItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TodoItemInclude<ExtArgs> | null
+  where?: Prisma.TodoItemWhereInput
+  orderBy?: Prisma.TodoItemOrderByWithRelationInput | Prisma.TodoItemOrderByWithRelationInput[]
+  cursor?: Prisma.TodoItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TodoItemScalarFieldEnum | Prisma.TodoItemScalarFieldEnum[]
 }
 
 /**

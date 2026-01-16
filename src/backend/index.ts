@@ -7,6 +7,11 @@ import { prisma } from '@/lib/prisma';
 import { authPlugin } from "./auth-plugin";
 import { categories } from "./routes/categories";
 import { expenseAccounts } from "./routes/expense-accounts";
+import { noteHabits } from "./routes/note-habits";
+import { noteSearch } from "./routes/note-search";
+import { noteTags } from "./routes/note-tags";
+import { noteTemplates } from "./routes/note-templates";
+import { noteTodos } from "./routes/note-todos";
 import { notes } from "./routes/notes";
 import { people } from "./routes/people";
 import { tags } from "./routes/tags";
@@ -51,38 +56,109 @@ const api = new Elysia({
 	.use(people)
 	.use(categories)
 	.use(notes)
+	.use(noteTags)
+	.use(noteTemplates)
+	.use(noteHabits)
+	.use(noteTodos)
+	.use(noteSearch)
 	.use(
 		cron({
-			name: 'heartbeat',
-			pattern: '*/10 * * * * *',
+			name: 'update-account-balances',
+			pattern: '*/10 * * * *', // Run every 10 minutes
 			async run() {
-				// calculate balance
-				const accounts = await prisma.expenseAccount.findMany({
-				})
-				for (const account of accounts) {
-					if (account.type === "CREDIT_CARD") {
-						//get all expenses
-						const expenses = await prisma.transaction.aggregate({
-							_sum: {
-								amount: true
-							},
-							where: {
-								accountId: account.id,
-								type: "OUTFLOW"
-							}
-						})
-						const payments = await prisma.transaction.aggregate({
-							_sum: {
-								amount: true
-							},
-							where: {
-								accountId: account.id,
-								type: "CC_PAYMENT"
-							}
-						})
+				console.log('🔄 Running account balance update cron job...');
 
+				try {
+					const accounts = await prisma.expenseAccount.findMany();
 
+					for (const account of accounts) {
+						let newBalance = 0;
+
+						if (account.type === "CREDIT_CARD") {
+							// For credit cards: balance = expenses - payments
+							// Get all expenses (OUTFLOW transactions)
+							const expenses = await prisma.transaction.aggregate({
+								_sum: {
+									amount: true
+								},
+								where: {
+									accountId: account.id,
+									type: "OUTFLOW"
+								}
+							});
+
+							// Get all payments (CC_PAYMENT transactions where this card is the destination)
+							const payments = await prisma.transaction.aggregate({
+								_sum: {
+									amount: true
+								},
+								where: {
+									accountId: account.id,
+									type: "CC_PAYMENT"
+								}
+							});
+
+							// Credit card balance = total expenses - total payments
+							const totalExpenses = expenses._sum.amount || 0;
+							const totalPayments = payments._sum.amount || 0;
+							newBalance = Number(totalExpenses) - Number(totalPayments);
+
+						} else if (account.type === "BANK" || account.type === "CASH") {
+							// For bank/cash: balance = income - outflows - payments made
+							// Get all income
+							const income = await prisma.transaction.aggregate({
+								_sum: {
+									amount: true
+								},
+								where: {
+									accountId: account.id,
+									type: "INCOME"
+								}
+							});
+
+							// Get all outflows (spending from this account)
+							const outflows = await prisma.transaction.aggregate({
+								_sum: {
+									amount: true
+								},
+								where: {
+									accountId: account.id,
+									type: "OUTFLOW"
+								}
+							});
+
+							// Get all payments made FROM this account (CC_PAYMENT where fromAccountId is this account)
+							const paymentsMade = await prisma.transaction.aggregate({
+								_sum: {
+									amount: true
+								},
+								where: {
+									fromAccountId: account.id,
+									type: "CC_PAYMENT"
+								}
+							});
+
+							// Bank/Cash balance = income - outflows - payments made
+							const totalIncome = income._sum.amount || 0;
+							const totalOutflows = outflows._sum.amount || 0;
+							const totalPaymentsMade = paymentsMade._sum.amount || 0;
+							newBalance = Number(totalIncome) - Number(totalOutflows) - Number(totalPaymentsMade);
+						}
+
+						// Update the account balance if it changed
+						const currentBalance = Number(account.balance);
+						if (currentBalance !== newBalance) {
+							await prisma.expenseAccount.update({
+								where: { id: account.id },
+								data: { balance: newBalance }
+							});
+							console.log(`✅ Updated ${account.name} (${account.type}): ${currentBalance} → ${newBalance}`);
+						}
 					}
+
+					console.log('✅ Account balance update completed');
+				} catch (error) {
+					console.error('❌ Error updating account balances:', error);
 				}
 			}
 		})

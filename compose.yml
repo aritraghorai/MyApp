@@ -6,8 +6,8 @@ services:
       tags:
         - aritraghorai/personal-manger:latest
         - aritraghorai/personal-manger:${VERSION:-latest} 
-    # ports:
-    #   - "3000:3000"
+    ports:
+      - "3000:3000"
     env_file:
       - .env
     volumes:

@@ -63,7 +63,7 @@ export default function Header() {
 								className: "bg-accent text-accent-foreground"
 							}}
 						>
-							<Text as="span" size="sm" weight="medium">Notes</Text>
+							<Text as="span" size="sm" weight="medium">Mindspace</Text>
 						</Link>
 					</nav>
 
@@ -87,7 +87,7 @@ export default function Header() {
 									className: "bg-accent text-accent-foreground"
 								}}
 							>
-								Notes
+								Mindspace
 							</Link>
 						</nav>
 

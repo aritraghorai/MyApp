@@ -25,3 +25,21 @@ export const TransactionType = {
 } as const
 
 export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]
+
+
+export const HabitFrequency = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY'
+} as const
+
+export type HabitFrequency = (typeof HabitFrequency)[keyof typeof HabitFrequency]
+
+
+export const TodoPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+} as const
+
+export type TodoPriority = (typeof TodoPriority)[keyof typeof TodoPriority]
