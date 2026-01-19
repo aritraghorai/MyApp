@@ -53,6 +53,20 @@ import { getTreaty } from "../../api.$";
 export const Route = createFileRoute("/_authed/expenses/")({
   component: ExpensesDashboard,
   ssr: true,
+  loader: async () => {
+    console.log("from server");
+    const now = new Date();
+    const selectedCycle = `${now.getMonth()}_${now.getFullYear()}`;
+    const { data, error } = await getTreaty().transactions.get({
+      query: {
+        limit: 1000,
+        page: 1,
+        billingCycle: selectedCycle,
+      },
+    });
+    if (error) throw error;
+    return data;
+  },
 });
 
 const COLORS = [
@@ -67,6 +81,7 @@ const COLORS = [
 ];
 
 function ExpensesDashboard() {
+  const loaderData = Route.useLoaderData();
   const now = new Date();
   const [selectedMonth, setSelectedMonth] = useState(() =>
     now.getMonth().toString(),
@@ -138,6 +153,12 @@ function ExpensesDashboard() {
     },
     retry: 2,
     retryDelay: 1000,
+    // Only use loader data if it matches the current billing cycle
+    initialData: () => {
+      const now = new Date();
+      const currentCycle = `${now.getMonth()}_${now.getFullYear()}`;
+      return selectedCycle === currentCycle ? loaderData : undefined;
+    },
   });
 
   const stats = useMemo(() => {
