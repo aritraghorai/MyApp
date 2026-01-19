@@ -1,4 +1,5 @@
 import { createRouter } from "@tanstack/react-router";
+import { LoadingSpinner } from "./components/LoadingSpinner";
 import type { RouterContext } from "./routes/__root";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
@@ -8,7 +9,7 @@ export const getRouter = () => {
 	const router = createRouter({
 		routeTree,
 		scrollRestoration: true,
-		defaultPreloadStaleTime: 0,
+		defaultPendingComponent: LoadingSpinner,
 		context: {
 			isAuthenticated: false,
 			user: null,

@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
-	redirect,
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import { getCurrentUser } from "@/lib/auth-server";
 import { useThemeStore } from "@/stores/useThemeStore";
 import Header from "../components/Header";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 import appCss from "../styles.css?url";
 import "../registerSW";
 
@@ -19,17 +19,18 @@ const queryClient = new QueryClient();
 export interface RouterContext {
 	isAuthenticated: boolean;
 	user?: {
-		id: string;
-		email: string;
-		name: string;
+		id?: string;
+		email?: string;
+		name?: string;
 		image?: string | null;
-		createdAt: Date;
-		updatedAt: Date;
-		emailVerified: boolean;
+		createdAt?: Date;
+		updatedAt?: Date;
+		emailVerified?: boolean;
 	} | null;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+
 	beforeLoad: async ({ location }) => {
 		// Skip auth check for API routes
 		if (location.pathname.startsWith("/api/")) {
@@ -39,6 +40,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 			};
 		}
 
+		// Fetch auth data (cached via HTTP Cache-Control headers)
 		const session = await getCurrentUser();
 
 		return session;
@@ -81,6 +83,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		],
 	}),
 
+	pendingComponent: LoadingSpinner,
 	shellComponent: RootDocument,
 });
 
