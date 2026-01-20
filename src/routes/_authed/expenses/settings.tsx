@@ -69,7 +69,7 @@ function TagsManager() {
 		try {
 			await tags.create(newName);
 			setNewName("");
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to create tag");
 		}
 	};
@@ -77,7 +77,7 @@ function TagsManager() {
 	const handleUpdate = async (id: string, name: string) => {
 		try {
 			await tags.update(id, name);
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to update tag");
 		}
 	};
@@ -85,7 +85,7 @@ function TagsManager() {
 	const handleDelete = async (id: string) => {
 		try {
 			await tags.delete(id);
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to delete tag");
 		}
 	};
@@ -134,7 +134,7 @@ function CategoriesManager() {
 		try {
 			await categories.create(newName);
 			setNewName("");
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to create category");
 		}
 	};
@@ -142,7 +142,7 @@ function CategoriesManager() {
 	const handleUpdate = async (id: string, name: string) => {
 		try {
 			await categories.update(id, name);
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to update category");
 		}
 	};
@@ -150,7 +150,7 @@ function CategoriesManager() {
 	const handleDelete = async (id: string) => {
 		try {
 			await categories.delete(id);
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to delete category");
 		}
 	};
@@ -199,7 +199,7 @@ function PeopleManager() {
 		try {
 			await people.create(newName);
 			setNewName("");
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to create person");
 		}
 	};
@@ -207,7 +207,7 @@ function PeopleManager() {
 	const handleUpdate = async (id: string, name: string) => {
 		try {
 			await people.update(id, name);
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to update person");
 		}
 	};
@@ -215,7 +215,7 @@ function PeopleManager() {
 	const handleDelete = async (id: string) => {
 		try {
 			await people.delete(id);
-		} catch (error) {
+		} catch (_error) {
 			alert("Failed to delete person");
 		}
 	};
@@ -294,7 +294,6 @@ function EditableItem({
 							value={name}
 							onChange={(e) => setName(e.target.value)}
 							className="flex-1 p-1 px-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
-							autoFocus
 							onKeyDown={(e) => {
 								if (e.key === "Enter") handleSave();
 								if (e.key === "Escape") handleCancel();

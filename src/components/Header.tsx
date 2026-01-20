@@ -12,13 +12,14 @@ export default function Header() {
 			<div className="container flex h-16 max-w-screen-2xl items-center px-4 md:px-6 mx-auto">
 				{/* Logo and Brand */}
 				<div className="mr-6 md:mr-8 flex">
-					<Link
-						to="/"
-						className="flex items-center space-x-3 group"
-					>
+					<Link to="/" className="flex items-center space-x-3 group">
 						<div className="relative">
 							<div className="relative bg-primary/10 p-1.5 rounded-lg border border-primary/20 group-hover:border-primary/40 transition-colors">
-								<img src="/app-icon.png" className="h-6 w-6 rounded" alt="Logo" />
+								<img
+									src="/app-icon.png"
+									className="h-6 w-6 rounded"
+									alt="Logo"
+								/>
 							</div>
 						</div>
 						<div className="flex flex-col">
@@ -50,19 +51,23 @@ export default function Header() {
 						to="/expenses"
 						className="relative px-4 py-2 text-sm font-medium rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground"
 						activeProps={{
-							className: "bg-accent text-accent-foreground"
+							className: "bg-accent text-accent-foreground",
 						}}
 					>
-						<Text as="span" size="sm" weight="medium">Expenses</Text>
+						<Text as="span" size="sm" weight="medium">
+							Expenses
+						</Text>
 					</Link>
 					<Link
 						to="/notes"
 						className="relative px-4 py-2 text-sm font-medium rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground"
 						activeProps={{
-							className: "bg-accent text-accent-foreground"
+							className: "bg-accent text-accent-foreground",
 						}}
 					>
-						<Text as="span" size="sm" weight="medium">Mindspace</Text>
+						<Text as="span" size="sm" weight="medium">
+							Mindspace
+						</Text>
 					</Link>
 				</nav>
 
@@ -74,7 +79,7 @@ export default function Header() {
 							to="/expenses"
 							className="px-3 py-2 text-xs font-medium rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground"
 							activeProps={{
-								className: "bg-accent text-accent-foreground"
+								className: "bg-accent text-accent-foreground",
 							}}
 						>
 							Expenses
@@ -83,7 +88,7 @@ export default function Header() {
 							to="/notes"
 							className="px-3 py-2 text-xs font-medium rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground"
 							activeProps={{
-								className: "bg-accent text-accent-foreground"
+								className: "bg-accent text-accent-foreground",
 							}}
 						>
 							Mindspace
@@ -95,7 +100,14 @@ export default function Header() {
 					{isPending ? (
 						<div className="flex items-center gap-2 px-3 py-1.5">
 							<div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-							<Text as="p" size="sm" variant="muted" className="hidden sm:inline">Loading...</Text>
+							<Text
+								as="p"
+								size="sm"
+								variant="muted"
+								className="hidden sm:inline"
+							>
+								Loading...
+							</Text>
 						</div>
 					) : (
 						<Button

@@ -24,7 +24,7 @@ export function TransactionForm({
 	isSubmitting,
 	onCancel,
 }: TransactionFormProps) {
-	const navigate = useNavigate();
+	const _navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		amount: initialData?.amount || "",
 		type: initialData?.type || "OUTFLOW",

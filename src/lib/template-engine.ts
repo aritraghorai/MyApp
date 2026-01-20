@@ -6,28 +6,30 @@
 import { format } from "date-fns";
 
 export interface TemplateVariables {
-    date?: Date;
-    [key: string]: any;
+	date?: Date;
+	[key: string]: any;
 }
 
 /**
  * Get default template variables based on current date/time
  */
-export function getDefaultVariables(date: Date = new Date()): Record<string, string> {
-    return {
-        date: format(date, "yyyy-MM-dd"),
-        fullDate: format(date, "EEEE, MMMM d, yyyy"),
-        day: format(date, "EEEE"),
-        shortDay: format(date, "EEE"),
-        month: format(date, "MMMM"),
-        shortMonth: format(date, "MMM"),
-        year: format(date, "yyyy"),
-        time: format(date, "h:mm a"),
-        time24: format(date, "HH:mm"),
-        week: format(date, "w"),
-        dayOfMonth: format(date, "d"),
-        dayOfYear: format(date, "DDD"),
-    };
+export function getDefaultVariables(
+	date: Date = new Date(),
+): Record<string, string> {
+	return {
+		date: format(date, "yyyy-MM-dd"),
+		fullDate: format(date, "EEEE, MMMM d, yyyy"),
+		day: format(date, "EEEE"),
+		shortDay: format(date, "EEE"),
+		month: format(date, "MMMM"),
+		shortMonth: format(date, "MMM"),
+		year: format(date, "yyyy"),
+		time: format(date, "h:mm a"),
+		time24: format(date, "HH:mm"),
+		week: format(date, "w"),
+		dayOfMonth: format(date, "d"),
+		dayOfYear: format(date, "DDD"),
+	};
 }
 
 /**
@@ -35,19 +37,21 @@ export function getDefaultVariables(date: Date = new Date()): Record<string, str
  * Supports {{variableName}} syntax
  */
 export function renderTemplate(
-    template: string,
-    customVariables: TemplateVariables = {}
+	template: string,
+	customVariables: TemplateVariables = {},
 ): string {
-    const date = customVariables.date || new Date();
-    const defaultVars = getDefaultVariables(date);
+	const date = customVariables.date || new Date();
+	const defaultVars = getDefaultVariables(date);
 
-    // Merge default and custom variables
-    const variables = { ...defaultVars, ...customVariables };
+	// Merge default and custom variables
+	const variables = { ...defaultVars, ...customVariables };
 
-    // Replace all {{variable}} occurrences
-    return template.replace(/\{\{(\w+)\}\}/g, (match, varName) => {
-        return variables[varName] !== undefined ? String(variables[varName]) : match;
-    });
+	// Replace all {{variable}} occurrences
+	return template.replace(/\{\{(\w+)\}\}/g, (match, varName) => {
+		return variables[varName] !== undefined
+			? String(variables[varName])
+			: match;
+	});
 }
 
 /**
@@ -55,52 +59,52 @@ export function renderTemplate(
  * Returns array of errors, empty if valid
  */
 export function validateTemplate(template: string): string[] {
-    const errors: string[] = [];
+	const errors: string[] = [];
 
-    // Check for unclosed variables
-    const openBraces = (template.match(/\{\{/g) || []).length;
-    const closeBraces = (template.match(/\}\}/g) || []).length;
+	// Check for unclosed variables
+	const openBraces = (template.match(/\{\{/g) || []).length;
+	const closeBraces = (template.match(/\}\}/g) || []).length;
 
-    if (openBraces !== closeBraces) {
-        errors.push("Unclosed template variable detected");
-    }
+	if (openBraces !== closeBraces) {
+		errors.push("Unclosed template variable detected");
+	}
 
-    // Check for invalid variable names
-    const variableRegex = /\{\{(\w+)\}\}/g;
-    let match;
-    while ((match = variableRegex.exec(template)) !== null) {
-        const varName = match[1];
-        if (!/^[a-zA-Z0-9_]+$/.test(varName)) {
-            errors.push(`Invalid variable name: ${varName}`);
-        }
-    }
+	// Check for invalid variable names
+	const variableRegex = /\{\{(\w+)\}\}/g;
+	let match;
+	while ((match = variableRegex.exec(template)) !== null) {
+		const varName = match[1];
+		if (!/^[a-zA-Z0-9_]+$/.test(varName)) {
+			errors.push(`Invalid variable name: ${varName}`);
+		}
+	}
 
-    return errors;
+	return errors;
 }
 
 /**
  * Extract variable names from template
  */
 export function extractVariables(template: string): string[] {
-    const variables = new Set<string>();
-    const variableRegex = /\{\{(\w+)\}\}/g;
+	const variables = new Set<string>();
+	const variableRegex = /\{\{(\w+)\}\}/g;
 
-    let match;
-    while ((match = variableRegex.exec(template)) !== null) {
-        variables.add(match[1]);
-    }
+	let match;
+	while ((match = variableRegex.exec(template)) !== null) {
+		variables.add(match[1]);
+	}
 
-    return Array.from(variables);
+	return Array.from(variables);
 }
 
 /**
  * Pre-built template library
  */
 export const DEFAULT_TEMPLATES = {
-    dailyJournal: {
-        name: "Daily Journal",
-        category: "Personal",
-        content: `# {{fullDate}}
+	dailyJournal: {
+		name: "Daily Journal",
+		category: "Personal",
+		content: `# {{fullDate}}
 
 ## Mood: 
 
@@ -120,12 +124,12 @@ export const DEFAULT_TEMPLATES = {
 ## Tomorrow's Focus
 - 
 `,
-    },
+	},
 
-    meetingNotes: {
-        name: "Meeting Notes",
-        category: "Work",
-        content: `# Meeting Notes - {{date}}
+	meetingNotes: {
+		name: "Meeting Notes",
+		category: "Work",
+		content: `# Meeting Notes - {{date}}
 
 **Date:** {{fullDate}}
 **Time:** {{time}}
@@ -149,12 +153,12 @@ export const DEFAULT_TEMPLATES = {
 
 
 `,
-    },
+	},
 
-    dailyStandup: {
-        name: "Daily Standup",
-        category: "Work",
-        content: `# Daily Standup - {{day}}, {{shortMonth}} {{dayOfMonth}}
+	dailyStandup: {
+		name: "Daily Standup",
+		category: "Work",
+		content: `# Daily Standup - {{day}}, {{shortMonth}} {{dayOfMonth}}
 
 ## Yesterday
 - 
@@ -167,12 +171,12 @@ export const DEFAULT_TEMPLATES = {
 - 
 
 `,
-    },
+	},
 
-    weeklyReview: {
-        name: "Weekly Review",
-        category: "Personal",
-        content: `# Weekly Review - Week {{week}}, {{year}}
+	weeklyReview: {
+		name: "Weekly Review",
+		category: "Personal",
+		content: `# Weekly Review - Week {{week}}, {{year}}
 
 ## Wins This Week
 - 
@@ -195,12 +199,12 @@ export const DEFAULT_TEMPLATES = {
 
 
 `,
-    },
+	},
 
-    gratitudeLog: {
-        name: "Gratitude Log",
-        category: "Personal",
-        content: `# Gratitude - {{fullDate}}
+	gratitudeLog: {
+		name: "Gratitude Log",
+		category: "Personal",
+		content: `# Gratitude - {{fullDate}}
 
 ## Three Things I'm Grateful For
 1. 
@@ -214,12 +218,12 @@ export const DEFAULT_TEMPLATES = {
 
 
 `,
-    },
+	},
 
-    projectPlanning: {
-        name: "Project Planning",
-        category: "Work",
-        content: `# Project Planning - {{date}}
+	projectPlanning: {
+		name: "Project Planning",
+		category: "Work",
+		content: `# Project Planning - {{date}}
 
 ## Project Name
 
@@ -246,5 +250,5 @@ export const DEFAULT_TEMPLATES = {
 - [ ] 
 
 `,
-    },
+	},
 };

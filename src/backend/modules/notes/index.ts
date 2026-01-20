@@ -1,8 +1,33 @@
 import { Elysia, t } from "elysia";
+import { authPlugin } from "../../auth-plugin";
+
+/**
+ * Notes Module Controller
+ * Consolidates all note-related routes following REST principles
+ * All sub-resources are organized under /notes prefix
+ */
+
 import { prisma } from "@/lib/prisma";
 import { calculateWordCount, parseTodos } from "@/lib/todo-parser";
-import { authPlugin } from "../auth-plugin";
+// Import all note sub-resource modules
+import { noteHabits } from "./habits";
+import { NoteModel } from "./model";
+import { noteSearch } from "./search";
+import { NoteService } from "./service";
+import { noteTags } from "./tags";
+import { noteTemplates } from "./templates";
+import { noteTodos } from "./todos";
 
+/**
+ * Notes Controller
+ * REST Structure:
+ * - GET/POST /notes - Main notes CRUD
+ * - /notes/tags/* - Tag management
+ * - /notes/templates/* - Template management  
+ * - /notes/habits/* - Habit tracking
+ * - /notes/todos/* - Todo management
+ * - /notes/search/* - Search and analytics
+ */
 export const notes = new Elysia({ prefix: "/notes" })
     .use(authPlugin)
     .model({
@@ -20,41 +45,18 @@ export const notes = new Elysia({ prefix: "/notes" })
             if (!date) {
                 return { error: "Date parameter is required" };
             }
-
-            // Parse the date string to start of day
-            const targetDate = new Date(date);
-            targetDate.setHours(0, 0, 0, 0);
-
-            const note = await prisma.dailyNote.findFirst({
-                where: {
-                    userId: user.id,
-                    date: targetDate,
-                },
-                include: {
-                    tags: {
-                        include: {
-                            tag: true,
-                        },
-                    },
-                    todos: {
-                        orderBy: { position: "asc" },
-                    },
-                },
-            });
-
-            return note;
+            return NoteService.getByDate(user.id, date);
         },
         {
             auth: true,
-            query: t.Object({
-                date: t.String(),
-            }),
+            query: NoteModel.dateQuery,
         },
     )
     .get(
         "/range",
         async ({ query, user }) => {
             const { from, to, tags, mood } = query;
+
 
             const fromDate = new Date(from);
             fromDate.setHours(0, 0, 0, 0);
@@ -214,33 +216,30 @@ export const notes = new Elysia({ prefix: "/notes" })
             body: "note",
         },
     )
-    .delete(
-        "/:id",
-        async ({ params: { id }, user, set }) => {
-            const existing = await prisma.dailyNote.findUnique({ where: { id } });
-            if (!existing) {
-                set.status = 404;
-                return "Note not found";
-            }
-            if (existing.userId !== user.id) {
-                set.status = 403;
-                return "Forbidden";
-            }
+    .group("/:id", {
+        auth: true,
+        params: t.Object({
+            id: t.String(),
+        }),
+    }, (app) => {
+        return app.delete(
+            "",
+            async ({ params: { id }, user, set }) => {
+                const existing = await prisma.dailyNote.findUnique({ where: { id } });
+                if (!existing) {
+                    set.status = 404;
+                    return "Note not found";
+                }
+                if (existing.userId !== user.id) {
+                    set.status = 403;
+                    return "Forbidden";
+                }
 
-            return await prisma.dailyNote.delete({
-                where: { id },
-            });
-        },
-        {
-            auth: true,
-            params: t.Object({
-                id: t.String(),
-            }),
-        },
-    )
-    .get(
-        "/:id/history",
-        async ({ params: { id }, user, set }) => {
+                return await prisma.dailyNote.delete({
+                    where: { id },
+                });
+            },
+        ).get("/history", async ({ params: { id }, user, set }) => {
             // Verify the note belongs to the user
             const note = await prisma.dailyNote.findUnique({ where: { id } });
             if (!note) {
@@ -259,61 +258,58 @@ export const notes = new Elysia({ prefix: "/notes" })
             });
 
             return history;
-        },
-        {
-            auth: true,
-            params: t.Object({
-                id: t.String(),
-            }),
-        },
-    )
-    .post(
-        "/:id/restore/:historyId",
-        async ({ params: { id, historyId }, user, set }) => {
-            // Verify the note belongs to the user
-            const note = await prisma.dailyNote.findUnique({ where: { id } });
-            if (!note) {
-                set.status = 404;
-                return "Note not found";
-            }
-            if (note.userId !== user.id) {
-                set.status = 403;
-                return "Forbidden";
-            }
+        }).post(
+            "/restore/:historyId",
+            async ({ params: { id, historyId }, user, set }) => {
+                // Verify the note belongs to the user
+                const note = await prisma.dailyNote.findUnique({ where: { id } });
+                if (!note) {
+                    set.status = 404;
+                    return "Note not found";
+                }
+                if (note.userId !== user.id) {
+                    set.status = 403;
+                    return "Forbidden";
+                }
 
-            // Verify the history entry exists and belongs to this note
-            const historyEntry = await prisma.noteHistory.findUnique({
-                where: { id: historyId },
-            });
-            if (!historyEntry) {
-                set.status = 404;
-                return "History entry not found";
-            }
-            if (historyEntry.noteId !== id || historyEntry.userId !== user.id) {
-                set.status = 403;
-                return "Forbidden";
-            }
+                // Verify the history entry exists and belongs to this note
+                const historyEntry = await prisma.noteHistory.findUnique({
+                    where: { id: historyId },
+                });
+                if (!historyEntry) {
+                    set.status = 404;
+                    return "History entry not found";
+                }
+                if (historyEntry.noteId !== id || historyEntry.userId !== user.id) {
+                    set.status = 403;
+                    return "Forbidden";
+                }
 
-            // Save current content to history before restoring
-            await prisma.noteHistory.create({
-                data: {
-                    noteId: note.id,
-                    content: note.content,
-                    userId: user.id,
-                },
-            });
+                // Save current content to history before restoring
+                await prisma.noteHistory.create({
+                    data: {
+                        noteId: note.id,
+                        content: note.content,
+                        userId: user.id,
+                    },
+                });
 
-            // Restore the note to the historical content
-            return await prisma.dailyNote.update({
-                where: { id },
-                data: { content: historyEntry.content },
-            });
-        },
-        {
-            auth: true,
-            params: t.Object({
-                id: t.String(),
-                historyId: t.String(),
-            }),
-        },
-    );
+                // Restore the note to the historical content
+                return await prisma.dailyNote.update({
+                    where: { id },
+                    data: { content: historyEntry.content },
+                });
+            },
+            {
+                params: t.Object({
+                    historyId: t.String(),
+                }),
+            },
+        )
+    }).use(noteTags)
+
+    // Sub-resource routes
+    .use(noteTemplates)
+    .use(noteHabits)
+    .use(noteTodos)
+    .use(noteSearch);

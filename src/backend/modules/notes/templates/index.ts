@@ -1,12 +1,12 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "@/lib/prisma";
 import { DEFAULT_TEMPLATES, renderTemplate, validateTemplate } from "@/lib/template-engine";
-import { authPlugin } from "../auth-plugin";
+import { authPlugin } from "../../../auth-plugin";
 
 /**
  * Template Management Routes
  */
-export const noteTemplates = new Elysia({ prefix: "/notes/templates" })
+export const noteTemplates = new Elysia({ prefix: "/templates" })
     .use(authPlugin)
     .model({
         createTemplate: t.Object({

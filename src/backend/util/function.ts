@@ -7,13 +7,13 @@ export const getBilldingPeriodByDate = (
 	cycleDate: number,
 ): string => {
 	const startDate = new Date(date);
-	if (cycleDate == -1) {
-		return startDate.getMonth() + "_" + startDate.getFullYear();
+	if (cycleDate === -1) {
+		return `${startDate.getMonth()}_${startDate.getFullYear()}`;
 	}
 	if (cycleDate > startDate.getDate()) {
 		startDate.setMonth(startDate.getMonth() + 1);
-		return startDate.getMonth() + "_" + startDate.getFullYear();
+		return `${startDate.getMonth()}_${startDate.getFullYear()}`;
 	} else {
-		return startDate.getMonth() + "_" + startDate.getFullYear();
+		return `${startDate.getMonth()}_${startDate.getFullYear()}`;
 	}
 };

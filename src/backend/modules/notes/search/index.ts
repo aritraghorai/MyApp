@@ -1,7 +1,7 @@
 import { format, startOfDay, subDays } from "date-fns";
 import { Elysia, t } from "elysia";
 import { prisma } from "@/lib/prisma";
-import { authPlugin } from "../auth-plugin";
+import { authPlugin } from "../../../auth-plugin";
 
 /**
  * Search and Analytics Routes

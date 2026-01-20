@@ -1,12 +1,12 @@
 import { differenceInDays, startOfDay, subDays } from "date-fns";
 import { Elysia, t } from "elysia";
 import { prisma } from "@/lib/prisma";
-import { authPlugin } from "../auth-plugin";
+import { authPlugin } from "../../../auth-plugin";
 
 /**
  * Habit Tracking Routes
  */
-export const noteHabits = new Elysia({ prefix: "/notes/habits" })
+export const noteHabits = new Elysia({ prefix: "/habits" })
     .use(authPlugin)
     .model({
         createHabit: t.Object({

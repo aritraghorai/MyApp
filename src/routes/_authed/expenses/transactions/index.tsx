@@ -256,7 +256,7 @@ function TransactionsList() {
 				const cycle = row.getValue("billingCycle") as string;
 				if (!cycle) return <div className="text-muted-foreground">-</div>;
 				const [month, year] = cycle.split("_");
-				const monthName = new Date(0, parseInt(month)).toLocaleString(
+				const monthName = new Date(0, parseInt(month, 10)).toLocaleString(
 					"default",
 					{ month: "short" },
 				);

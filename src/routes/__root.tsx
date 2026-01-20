@@ -30,7 +30,6 @@ export interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-
 	beforeLoad: async ({ location }) => {
 		// Skip auth check for API routes
 		if (location.pathname.startsWith("/api/")) {

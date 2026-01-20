@@ -1,13 +1,13 @@
 import { startOfDay, subDays } from "date-fns";
 import { Elysia, t } from "elysia";
 import { prisma } from "@/lib/prisma";
-import { parseTodos } from "@/lib/todo-parser";
-import { authPlugin } from "../auth-plugin";
+import { deleteTodoFromNote, parseTodos, updateTodoInMarkdown } from "@/lib/todo-parser";
+import { authPlugin } from "../../../auth-plugin";
 
 /**
  * Todo Management Routes
  */
-export const noteTodos = new Elysia({ prefix: "/notes/todos" })
+export const noteTodos = new Elysia({ prefix: "/todos" })
     .use(authPlugin)
     .model({
         createTodo: t.Object({
@@ -25,7 +25,7 @@ export const noteTodos = new Elysia({ prefix: "/notes/todos" })
     })
     // Get todos for a specific note
     .get(
-        "/:noteId",
+        "notes/:noteId",
         async ({ params: { noteId }, user, set }) => {
             const note = await prisma.dailyNote.findUnique({ where: { id: noteId } });
 
@@ -51,7 +51,7 @@ export const noteTodos = new Elysia({ prefix: "/notes/todos" })
     )
     // Extract todos from note content
     .post(
-        "/:noteId/extract",
+        "notes/:noteId/extract",
         async ({ params: { noteId }, user, set }) => {
             const note = await prisma.dailyNote.findUnique({ where: { id: noteId } });
 
@@ -153,10 +153,28 @@ export const noteTodos = new Elysia({ prefix: "/notes/todos" })
                 return { error: "Forbidden" };
             }
 
-            return await prisma.todoItem.update({
+            const updatedTodo = await prisma.todoItem.update({
                 where: { id },
                 data: body,
             });
+            //go to the notes and update the todo in notes also
+            const note = await prisma.dailyNote.findUnique({ where: { id: updatedTodo.noteId } });
+            if (!note) {
+                set.status = 404;
+                return { error: "Note not found" };
+            }
+            if (note.userId !== user.id) {
+                set.status = 403;
+                return { error: "Forbidden" };
+            }
+            const updatedContent = updateTodoInMarkdown(note.content, todo.content, updatedTodo.completed)
+            await prisma.dailyNote.update({
+                where: { id: todo.noteId },
+                data: {
+                    content: updatedContent,
+                },
+            });
+            return updatedTodo;
         },
         {
             auth: true,
@@ -180,7 +198,25 @@ export const noteTodos = new Elysia({ prefix: "/notes/todos" })
                 return { error: "Forbidden" };
             }
 
-            return await prisma.todoItem.delete({ where: { id } });
+            const deletedTodo = await prisma.todoItem.delete({ where: { id } });
+
+            const note = await prisma.dailyNote.findUnique({ where: { id: deletedTodo.noteId } });
+            if (!note) {
+                set.status = 404;
+                return { error: "Note not found" };
+            }
+            if (note.userId !== user.id) {
+                set.status = 403;
+                return { error: "Forbidden" };
+            }
+            const updatedContent = deleteTodoFromNote(note.content, deletedTodo.content)
+            await prisma.dailyNote.update({
+                where: { id: deletedTodo.noteId },
+                data: {
+                    content: updatedContent,
+                },
+            });
+            return deletedTodo;
         },
         {
             auth: true,
