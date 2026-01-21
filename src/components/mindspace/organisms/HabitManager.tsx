@@ -18,7 +18,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { MetadataFieldsEditor } from "./-MetadataFieldsEditor";
+import { MetadataFieldsEditor } from "../molecules/MetadataFieldsEditor";
 
 interface Habit {
 	id: string;
@@ -251,11 +251,10 @@ export function HabitManager({ open, onOpenChange }: HabitManagerProps) {
 											onClick={() =>
 												setFormData({ ...formData, color: color.value })
 											}
-											className={`w-8 h-8 rounded-full border-2 transition-all ${
-												formData.color === color.value
+											className={`w-8 h-8 rounded-full border-2 transition-all ${formData.color === color.value
 													? "border-gray-900 dark:border-white scale-110"
 													: "border-transparent hover:scale-105"
-											}`}
+												}`}
 											style={{ backgroundColor: color.value }}
 											title={color.name}
 										/>

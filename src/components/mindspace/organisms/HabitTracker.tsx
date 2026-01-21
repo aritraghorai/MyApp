@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { HabitManager } from "./-HabitManager";
-import { MetadataInput } from "./-MetadataInput";
+import { MetadataInput } from "../atoms/MetadataInput";
+import { HabitManager } from "./HabitManager";
 
 interface Habit {
 	id: string;
@@ -201,11 +201,10 @@ export function HabitTracker({ date }: HabitTrackerProps) {
 									onClick={() => handleHabitClick(habit)}
 									className={`
                                         w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all shrink-0
-                                        ${
-																					isCompleted
-																						? `bg-gradient-to-br from-green-500 to-emerald-500 border-transparent`
-																						: "border-gray-300 dark:border-gray-600 hover:border-gray-400"
-																				}
+                                        ${isCompleted
+											? `bg-gradient-to-br from-green-500 to-emerald-500 border-transparent`
+											: "border-gray-300 dark:border-gray-600 hover:border-gray-400"
+										}
                                     `}
 									style={{
 										backgroundColor: isCompleted ? habit.color : undefined,
@@ -231,11 +230,10 @@ export function HabitTracker({ date }: HabitTrackerProps) {
 								<div className="flex-1 min-w-0">
 									<div className="flex items-center gap-2">
 										<span
-											className={`text-sm font-medium ${
-												isCompleted
+											className={`text-sm font-medium ${isCompleted
 													? "text-gray-500 dark:text-gray-400 line-through"
 													: "text-gray-900 dark:text-gray-100"
-											}`}
+												}`}
 										>
 											{habit.name}
 										</span>

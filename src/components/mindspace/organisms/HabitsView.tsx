@@ -1,4 +1,4 @@
-import { HabitTracker } from "./-HabitTracker";
+import { HabitTracker } from "./HabitTracker";
 
 interface HabitsViewProps {
 	date: Date;
