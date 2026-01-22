@@ -16,6 +16,10 @@ import { Route as AuthedNotesRouteRouteImport } from './routes/_authed/notes/rou
 import { Route as AuthedExpensesRouteRouteImport } from './routes/_authed/expenses/route'
 import { Route as AuthedNotesIndexRouteImport } from './routes/_authed/notes/index'
 import { Route as AuthedExpensesIndexRouteImport } from './routes/_authed/expenses/index'
+import { Route as AuthedNotesTodosRouteImport } from './routes/_authed/notes/todos'
+import { Route as AuthedNotesListRouteImport } from './routes/_authed/notes/list'
+import { Route as AuthedNotesJournalRouteImport } from './routes/_authed/notes/journal'
+import { Route as AuthedNotesHabitsRouteImport } from './routes/_authed/notes/habits'
 import { Route as AuthedExpensesSettingsRouteImport } from './routes/_authed/expenses/settings'
 import { Route as AuthedExpensesAccountsRouteImport } from './routes/_authed/expenses/accounts'
 import { Route as AuthedExpensesTransactionsIndexRouteImport } from './routes/_authed/expenses/transactions/index'
@@ -54,6 +58,26 @@ const AuthedExpensesIndexRoute = AuthedExpensesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthedExpensesRouteRoute,
 } as any)
+const AuthedNotesTodosRoute = AuthedNotesTodosRouteImport.update({
+  id: '/todos',
+  path: '/todos',
+  getParentRoute: () => AuthedNotesRouteRoute,
+} as any)
+const AuthedNotesListRoute = AuthedNotesListRouteImport.update({
+  id: '/list',
+  path: '/list',
+  getParentRoute: () => AuthedNotesRouteRoute,
+} as any)
+const AuthedNotesJournalRoute = AuthedNotesJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => AuthedNotesRouteRoute,
+} as any)
+const AuthedNotesHabitsRoute = AuthedNotesHabitsRouteImport.update({
+  id: '/habits',
+  path: '/habits',
+  getParentRoute: () => AuthedNotesRouteRoute,
+} as any)
 const AuthedExpensesSettingsRoute = AuthedExpensesSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -78,6 +102,10 @@ export interface FileRoutesByFullPath {
   '/api/$': typeof ApiSplatRoute
   '/expenses/accounts': typeof AuthedExpensesAccountsRoute
   '/expenses/settings': typeof AuthedExpensesSettingsRoute
+  '/notes/habits': typeof AuthedNotesHabitsRoute
+  '/notes/journal': typeof AuthedNotesJournalRoute
+  '/notes/list': typeof AuthedNotesListRoute
+  '/notes/todos': typeof AuthedNotesTodosRoute
   '/expenses/': typeof AuthedExpensesIndexRoute
   '/notes/': typeof AuthedNotesIndexRoute
   '/expenses/transactions': typeof AuthedExpensesTransactionsIndexRoute
@@ -87,6 +115,10 @@ export interface FileRoutesByTo {
   '/api/$': typeof ApiSplatRoute
   '/expenses/accounts': typeof AuthedExpensesAccountsRoute
   '/expenses/settings': typeof AuthedExpensesSettingsRoute
+  '/notes/habits': typeof AuthedNotesHabitsRoute
+  '/notes/journal': typeof AuthedNotesJournalRoute
+  '/notes/list': typeof AuthedNotesListRoute
+  '/notes/todos': typeof AuthedNotesTodosRoute
   '/expenses': typeof AuthedExpensesIndexRoute
   '/notes': typeof AuthedNotesIndexRoute
   '/expenses/transactions': typeof AuthedExpensesTransactionsIndexRoute
@@ -100,6 +132,10 @@ export interface FileRoutesById {
   '/api/$': typeof ApiSplatRoute
   '/_authed/expenses/accounts': typeof AuthedExpensesAccountsRoute
   '/_authed/expenses/settings': typeof AuthedExpensesSettingsRoute
+  '/_authed/notes/habits': typeof AuthedNotesHabitsRoute
+  '/_authed/notes/journal': typeof AuthedNotesJournalRoute
+  '/_authed/notes/list': typeof AuthedNotesListRoute
+  '/_authed/notes/todos': typeof AuthedNotesTodosRoute
   '/_authed/expenses/': typeof AuthedExpensesIndexRoute
   '/_authed/notes/': typeof AuthedNotesIndexRoute
   '/_authed/expenses/transactions/': typeof AuthedExpensesTransactionsIndexRoute
@@ -113,6 +149,10 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/expenses/accounts'
     | '/expenses/settings'
+    | '/notes/habits'
+    | '/notes/journal'
+    | '/notes/list'
+    | '/notes/todos'
     | '/expenses/'
     | '/notes/'
     | '/expenses/transactions'
@@ -122,6 +162,10 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/expenses/accounts'
     | '/expenses/settings'
+    | '/notes/habits'
+    | '/notes/journal'
+    | '/notes/list'
+    | '/notes/todos'
     | '/expenses'
     | '/notes'
     | '/expenses/transactions'
@@ -134,6 +178,10 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/_authed/expenses/accounts'
     | '/_authed/expenses/settings'
+    | '/_authed/notes/habits'
+    | '/_authed/notes/journal'
+    | '/_authed/notes/list'
+    | '/_authed/notes/todos'
     | '/_authed/expenses/'
     | '/_authed/notes/'
     | '/_authed/expenses/transactions/'
@@ -196,6 +244,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedExpensesIndexRouteImport
       parentRoute: typeof AuthedExpensesRouteRoute
     }
+    '/_authed/notes/todos': {
+      id: '/_authed/notes/todos'
+      path: '/todos'
+      fullPath: '/notes/todos'
+      preLoaderRoute: typeof AuthedNotesTodosRouteImport
+      parentRoute: typeof AuthedNotesRouteRoute
+    }
+    '/_authed/notes/list': {
+      id: '/_authed/notes/list'
+      path: '/list'
+      fullPath: '/notes/list'
+      preLoaderRoute: typeof AuthedNotesListRouteImport
+      parentRoute: typeof AuthedNotesRouteRoute
+    }
+    '/_authed/notes/journal': {
+      id: '/_authed/notes/journal'
+      path: '/journal'
+      fullPath: '/notes/journal'
+      preLoaderRoute: typeof AuthedNotesJournalRouteImport
+      parentRoute: typeof AuthedNotesRouteRoute
+    }
+    '/_authed/notes/habits': {
+      id: '/_authed/notes/habits'
+      path: '/habits'
+      fullPath: '/notes/habits'
+      preLoaderRoute: typeof AuthedNotesHabitsRouteImport
+      parentRoute: typeof AuthedNotesRouteRoute
+    }
     '/_authed/expenses/settings': {
       id: '/_authed/expenses/settings'
       path: '/settings'
@@ -238,10 +314,18 @@ const AuthedExpensesRouteRouteWithChildren =
   AuthedExpensesRouteRoute._addFileChildren(AuthedExpensesRouteRouteChildren)
 
 interface AuthedNotesRouteRouteChildren {
+  AuthedNotesHabitsRoute: typeof AuthedNotesHabitsRoute
+  AuthedNotesJournalRoute: typeof AuthedNotesJournalRoute
+  AuthedNotesListRoute: typeof AuthedNotesListRoute
+  AuthedNotesTodosRoute: typeof AuthedNotesTodosRoute
   AuthedNotesIndexRoute: typeof AuthedNotesIndexRoute
 }
 
 const AuthedNotesRouteRouteChildren: AuthedNotesRouteRouteChildren = {
+  AuthedNotesHabitsRoute: AuthedNotesHabitsRoute,
+  AuthedNotesJournalRoute: AuthedNotesJournalRoute,
+  AuthedNotesListRoute: AuthedNotesListRoute,
+  AuthedNotesTodosRoute: AuthedNotesTodosRoute,
   AuthedNotesIndexRoute: AuthedNotesIndexRoute,
 }
 
